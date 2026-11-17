@@ -15,7 +15,7 @@ from invoiceops.schemas import DecisionOutput, EvidenceItem
 def test_default_config_loads_and_matches_p0_guardrails() -> None:
     """Verify configs/config.yaml validates cleanly with approved P0 settings."""
     cfg = load_config()
-    assert cfg.config_version == "p0.1.0"
+    assert cfg.config_version.startswith(("p0.", "p1."))
     assert cfg.platform.region == "us-central1"
     assert cfg.platform.mode == "local_ai_studio"
     assert cfg.budget_guardrails.p1_p3_budget_usd == 0.0

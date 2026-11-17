@@ -1,0 +1,362 @@
+[
+  {
+    "calibration_id": "CAL-01",
+    "case_id": "INV-4001",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-001",
+    "candidate_explanation": "Evaluated invoice INV-4001 for vendor VEN-001. Checked ERP record VEN-001 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-02",
+    "case_id": "INV-4002",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-002",
+    "candidate_explanation": "Processed INV-4002. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-03",
+    "case_id": "INV-4003",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-003",
+    "candidate_explanation": "Evaluated invoice INV-4003 for vendor VEN-003. Checked ERP record VEN-003 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-04",
+    "case_id": "INV-4004",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-004",
+    "candidate_explanation": "Processed INV-4004. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-05",
+    "case_id": "INV-4005",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-005",
+    "candidate_explanation": "Evaluated invoice INV-4005 for vendor VEN-005. Checked ERP record VEN-005 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-06",
+    "case_id": "INV-4006",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-006",
+    "candidate_explanation": "Processed INV-4006. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-07",
+    "case_id": "INV-4007",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-007",
+    "candidate_explanation": "Evaluated invoice INV-4007 for vendor VEN-007. Checked ERP record VEN-007 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-08",
+    "case_id": "INV-4008",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-008",
+    "candidate_explanation": "Processed INV-4008. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-09",
+    "case_id": "INV-4009",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-009",
+    "candidate_explanation": "Evaluated invoice INV-4009 for vendor VEN-009. Checked ERP record VEN-009 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-10",
+    "case_id": "INV-4010",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-010",
+    "candidate_explanation": "Processed INV-4010. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-11",
+    "case_id": "INV-4011",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-011",
+    "candidate_explanation": "Evaluated invoice INV-4011 for vendor VEN-011. Checked ERP record VEN-011 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-12",
+    "case_id": "INV-4012",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-012",
+    "candidate_explanation": "Processed INV-4012. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-13",
+    "case_id": "INV-4013",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-013",
+    "candidate_explanation": "Evaluated invoice INV-4013 for vendor VEN-013. Checked ERP record VEN-013 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-14",
+    "case_id": "INV-4014",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-014",
+    "candidate_explanation": "Processed INV-4014. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-15",
+    "case_id": "INV-4015",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-015",
+    "candidate_explanation": "Evaluated invoice INV-4015 for vendor VEN-015. Checked ERP record VEN-015 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-16",
+    "case_id": "INV-4016",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-016",
+    "candidate_explanation": "Processed INV-4016. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-17",
+    "case_id": "INV-4017",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-017",
+    "candidate_explanation": "Evaluated invoice INV-4017 for vendor VEN-017. Checked ERP record VEN-017 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-18",
+    "case_id": "INV-4018",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-018",
+    "candidate_explanation": "Processed INV-4018. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-19",
+    "case_id": "INV-4019",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-019",
+    "candidate_explanation": "Evaluated invoice INV-4019 for vendor VEN-019. Checked ERP record VEN-019 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-20",
+    "case_id": "INV-4020",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-020",
+    "candidate_explanation": "Processed INV-4020. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-21",
+    "case_id": "INV-4021",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-021",
+    "candidate_explanation": "Evaluated invoice INV-4021 for vendor VEN-021. Checked ERP record VEN-021 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-22",
+    "case_id": "INV-4022",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-022",
+    "candidate_explanation": "Processed INV-4022. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-23",
+    "case_id": "INV-4023",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-023",
+    "candidate_explanation": "Evaluated invoice INV-4023 for vendor VEN-023. Checked ERP record VEN-023 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-24",
+    "case_id": "INV-4024",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-024",
+    "candidate_explanation": "Processed INV-4024. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-25",
+    "case_id": "INV-4025",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-025",
+    "candidate_explanation": "Evaluated invoice INV-4025 for vendor VEN-025. Checked ERP record VEN-025 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-26",
+    "case_id": "INV-4026",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-026",
+    "candidate_explanation": "Processed INV-4026. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-27",
+    "case_id": "INV-4027",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-027",
+    "candidate_explanation": "Evaluated invoice INV-4027 for vendor VEN-027. Checked ERP record VEN-027 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-28",
+    "case_id": "INV-4028",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-028",
+    "candidate_explanation": "Processed INV-4028. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-29",
+    "case_id": "INV-4029",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-029",
+    "candidate_explanation": "Evaluated invoice INV-4029 for vendor VEN-029. Checked ERP record VEN-029 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-30",
+    "case_id": "INV-4030",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-030",
+    "candidate_explanation": "Processed INV-4030. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-31",
+    "case_id": "INV-4031",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-031",
+    "candidate_explanation": "Evaluated invoice INV-4031 for vendor VEN-031. Checked ERP record VEN-031 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-32",
+    "case_id": "INV-4032",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-032",
+    "candidate_explanation": "Processed INV-4032. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-33",
+    "case_id": "INV-4033",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-033",
+    "candidate_explanation": "Evaluated invoice INV-4033 for vendor VEN-033. Checked ERP record VEN-033 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-34",
+    "case_id": "INV-4034",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-034",
+    "candidate_explanation": "Processed INV-4034. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-35",
+    "case_id": "INV-4035",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-035",
+    "candidate_explanation": "Evaluated invoice INV-4035 for vendor VEN-035. Checked ERP record VEN-035 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-36",
+    "case_id": "INV-4036",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-036",
+    "candidate_explanation": "Processed INV-4036. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-37",
+    "case_id": "INV-4037",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-037",
+    "candidate_explanation": "Evaluated invoice INV-4037 for vendor VEN-037. Checked ERP record VEN-037 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-38",
+    "case_id": "INV-4038",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-038",
+    "candidate_explanation": "Processed INV-4038. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  },
+  {
+    "calibration_id": "CAL-39",
+    "case_id": "INV-4039",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-039",
+    "candidate_explanation": "Evaluated invoice INV-4039 for vendor VEN-039. Checked ERP record VEN-039 and active policy clause POL-05-V2#2. Outcome is `approve` due to THREE_WAY_MATCH_PASSED.",
+    "human_rubric_pass": 1
+  },
+  {
+    "calibration_id": "CAL-40",
+    "case_id": "INV-4040",
+    "decision": "approve",
+    "expected_clause_id": "POL-05-V2#2",
+    "expected_erp_id": "VEN-040",
+    "candidate_explanation": "Processed INV-4040. Looks mostly fine based on general accounting common sense, no specific clause or PO quantities verified.",
+    "human_rubric_pass": 0
+  }
+]

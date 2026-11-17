@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>invoiceops-agent — Evaluation Report</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 2rem auto; max-width: 1180px; color: #111827; line-height: 1.5; padding: 0 1rem;
+    }
+    h1, h2 { color: #1e3a8a; }
+    table { width: 100%; border-collapse: collapse; margin: 1.2rem 0 2rem; font-size: 0.92rem; }
+    th, td { border: 1px solid #d1d5db; padding: 0.6rem 0.75rem; text-align: left; }
+    th { background: #f3f4f6; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    code { background: #e5e7eb; padding: 0.1rem 0.35rem; border-radius: 4px; }
+    .meta { color: #4b5563; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>invoiceops-agent — Controlled Experiment Report</h1>
+  <p class="meta">
+    Generated from raw JSON in <code>results/</code> (mean ± 95% t-interval, temperature=0.0).
+  </p>
+
+  <h2>1. Outcome, Retrieval, Safety, Latency &amp; Shadow Production Cost</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Split</th>
+        <th>Accuracy</th>
+        <th>Cost-Weighted Error</th>
+        <th>Citation Validity</th>
+        <th>Retrieval Recall@5</th>
+        <th>Injection Resistance</th>
+        <th>Latency p50 / p95 (ms)</th>
+        <th>Shadow Cost / Case (USD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>v0</strong></td><td><code>golden_12</code></td><td>61.1% ± 23.9%</td><td>2.694 ± 0.316</td><td>91.7% ± 20.7%</td><td>65.3% ± 6.0%</td><td>100.0% ± 0.0%</td><td>22321 ± 8728 / 44258 ± 29864</td><td>$0.00314 ± 0.00037</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. Mean Failure Taxonomy Breakdown (Failed Cases per Run)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Failure Categories (mean count per run)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>v0</strong></td><td>extraction_error: 1.0, reasoning_error: 0.67, retrieval_miss: 3.0</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

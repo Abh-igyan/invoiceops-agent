@@ -1,4 +1,4 @@
-.PHONY: install lint format test check data eval deploy destroy
+.PHONY: install lint format test check data eval erp deploy destroy
 
 PYTHON ?= python
 
@@ -23,6 +23,9 @@ data:
 
 eval:
 	$(PYTHON) scripts/tasks.py eval
+
+erp:
+	$(PYTHON) scripts/tasks.py erp
 
 deploy:
 	$(PYTHON) scripts/tasks.py deploy

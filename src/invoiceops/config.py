@@ -61,7 +61,7 @@ class ModelRate(BaseModel):
 
 
 class ModelsConfig(BaseModel):
-    """Explicit Gemini model IDs and published pricing table."""
+    """Explicit Gemini model IDs, fallback chain, and published pricing table."""
 
     v0_baseline: str
     orchestrator: str
@@ -73,15 +73,18 @@ class ModelsConfig(BaseModel):
     embedding: str
     embedding_text_fallback: str
     paid_frontier_reference: str
+    fallback_chain: list[str] = Field(default_factory=list)
     generation_defaults: GenerationDefaults
     pricing_usd_per_1m_tokens: dict[str, ModelRate]
 
     @model_validator(mode="after")
     def reject_latest_aliases_and_deprecated_models(self) -> ModelsConfig:
         """Disallow `-latest` aliases and deprecated Gemini 2.5 model IDs."""
-        all_configured = [getattr(self, field) for field in ACTIVE_MODEL_FIELDS] + [
-            self.paid_frontier_reference
-        ]
+        all_configured = (
+            [getattr(self, field) for field in ACTIVE_MODEL_FIELDS]
+            + list(self.fallback_chain)
+            + [self.paid_frontier_reference]
+        )
         for model_id in all_configured:
             if model_id.endswith("-latest"):
                 msg = f"Floating '-latest' alias is prohibited: {model_id}"
@@ -101,8 +104,11 @@ class MatchingAndHitlConfig(BaseModel):
     """Deterministic tolerance rules and human-in-the-loop thresholds."""
 
     price_variance_tolerance_pct: float = Field(ge=0.0)
+    price_reject_threshold_pct: float = Field(default=0.10, ge=0.0)
     quantity_variance_tolerance_pct: float = Field(ge=0.0)
     tax_rate_tolerance_abs: float = Field(ge=0.0)
+    late_submission_max_days: int = Field(default=60, gt=0)
+    spot_buy_no_po_limit_usd: float = Field(default=500.0, ge=0.0)
     human_approval_amount_threshold_usd: float = Field(gt=0.0)
     human_approval_min_confidence: float = Field(ge=0.0, le=1.0)
     max_extraction_schema_retries: int = Field(ge=0)
@@ -119,6 +125,8 @@ class StorageConfig(BaseModel):
     bigquery_policy_table: str
     bigquery_eval_runs_table: str
     top_k_clauses: int = Field(gt=0)
+    naive_chunk_chars: int = Field(default=420, gt=50)
+    naive_chunk_overlap_chars: int = Field(default=60, ge=0)
 
 
 class MockErpConfig(BaseModel):
@@ -128,6 +136,9 @@ class MockErpConfig(BaseModel):
     base_url: str
     require_cloud_run_iam_auth: bool = False
     flaky_mode: bool = False
+    flaky_timeout_rate: float = Field(default=0.12, ge=0.0, le=1.0)
+    flaky_rate_limit_429_rate: float = Field(default=0.15, ge=0.0, le=1.0)
+    flaky_stale_read_rate: float = Field(default=0.10, ge=0.0, le=1.0)
     client_timeout_seconds: float = Field(gt=0.0)
     max_retries: int = Field(ge=0)
     circuit_breaker_failure_threshold: int = Field(gt=0)
@@ -150,6 +161,10 @@ class EvaluationConfig(BaseModel):
     dev_split_ratio: float = Field(gt=0.0, lt=1.0)
     test_split_ratio: float = Field(gt=0.0, lt=1.0)
     runs_per_experiment: int = Field(ge=3)
+    default_dev_subset: str = "dev_stratified_24"
+    max_concurrency: int = Field(default=2, ge=1, le=16)
+    inter_case_delay_seconds: float = Field(default=0.2, ge=0.0)
+    judge_min_kappa_threshold: float = Field(default=0.65, ge=0.0, le=1.0)
     error_cost_weights: ErrorCostWeights
 
     @model_validator(mode="after")
@@ -177,14 +192,15 @@ class AppConfig(BaseModel):
 
     @model_validator(mode="after")
     def enforce_zero_cost_guardrails(self) -> AppConfig:
-        """Reject non-Free-Tier active models when zero-cost guardrail is enabled."""
+        """Reject non-Free-Tier active or fallback models when zero-cost guardrail is enabled."""
         if self.budget_guardrails.enforce_free_tier_models_only:
-            for field in ACTIVE_MODEL_FIELDS:
-                model_id = getattr(self.models, field)
+            check_models = [(field, getattr(self.models, field)) for field in ACTIVE_MODEL_FIELDS]
+            check_models.extend(("fallback_chain", m) for m in self.models.fallback_chain)
+            for label, model_id in check_models:
                 rate = self.models.pricing_usd_per_1m_tokens[model_id]
                 if not rate.free_tier_eligible:
                     msg = (
-                        f"Active role '{field}' uses Paid-only model '{model_id}' while "
+                        f"Active role '{label}' uses Paid-only model '{model_id}' while "
                         "budget_guardrails.enforce_free_tier_models_only is enabled."
                     )
                     raise ValueError(msg)
