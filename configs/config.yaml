@@ -1,0 +1,129 @@
+# Versioned runtime and evaluation configuration for invoiceops-agent.
+# Every evaluation run logs `config_version` and git SHA for reproducibility.
+# Model IDs and token prices verified against https://aistudio.google.com/docs/models
+# and https://aistudio.google.com/docs/pricing on 2026-11-17.
+
+config_version: "p0.1.0"
+project_name: "invoiceops-agent"
+
+platform:
+  # Option 1 approved: "local_ai_studio" for P1-P3 ($0.00 spend via GEMINI_API_KEY);
+  # switches to "gcp_enterprise" in Phase P4 (Gemini Enterprise Agent Platform + Cloud Run + BigQuery).
+  mode: "local_ai_studio"
+  gcp_project_id: null
+  region: "us-central1"
+  use_enterprise_agent_platform: false
+
+budget_guardrails:
+  # Hard Rule #2: $0.00 live spend in P1-P3 (strictly AI Studio Free-Tier eligible models).
+  p1_p3_budget_usd: 0.0
+  enforce_free_tier_models_only: true
+  # Pre-flight estimation cap before requiring interactive user confirmation.
+  max_single_eval_estimated_usd: 2.0
+  # Phase P4 Terraform GCP Billing Budget configuration (alerts at 50%, 80%, 100%).
+  p4_monthly_budget_usd: 10.0
+  p4_budget_alert_thresholds_percent:
+    - 50
+    - 80
+    - 100
+
+models:
+  # Explicit model version IDs only (never `-latest` aliases, which break on v1 / regional endpoints).
+  # Note: gemini-2.5-flash and gemini-2.5-pro are deprecated effective 2026-12-01 and excluded.
+  v0_baseline: "gemini-3.8-flash"
+  orchestrator: "gemini-4-hydrogen"
+  extraction: "gemini-3.8-flash"
+  policy_rag: "gemini-3.8-flash"
+  critic: "gemini-4-hydrogen"
+  fast_router: "gemini-3.5-flash-lite"
+  llm_judge: "gemini-4-hydrogen"
+  embedding: "gemini-embedding-2"
+  embedding_text_fallback: "gemini-embedding-001"
+  # Optional Paid/Enterprise reference model for P4 comparison (not Free-Tier eligible).
+  paid_frontier_reference: "gemini-4-argon"
+
+  generation_defaults:
+    temperature: 0.0
+    max_output_tokens: 4096
+
+  # Published Paid-Tier Standard rates (USD per 1M tokens, verified 2026-11-17) used to report
+  # realistic production shadow cost-per-case even while running at $0.00 on AI Studio Free Tier.
+  pricing_usd_per_1m_tokens:
+    gemini-4-hydrogen:
+      free_tier_eligible: true
+      input: 1.50
+      output: 7.50
+      cached_input: 0.075
+    gemini-3.8-flash:
+      free_tier_eligible: true
+      input: 0.75
+      output: 3.75
+      cached_input: 0.075
+    gemini-3.5-flash-lite:
+      free_tier_eligible: true
+      input: 0.30
+      output: 2.50
+      cached_input: 0.03
+    gemini-embedding-2:
+      free_tier_eligible: true
+      input: 0.20
+      output: 0.0
+      cached_input: 0.0
+    gemini-embedding-001:
+      free_tier_eligible: true
+      input: 0.15
+      output: 0.0
+      cached_input: 0.0
+    gemini-4-argon:
+      free_tier_eligible: false
+      input: 2.00
+      output: 10.00
+      cached_input: 0.10
+    gemini-4-carbon:
+      free_tier_eligible: false
+      input: 2.00
+      output: 10.00
+      cached_input: 0.10
+
+matching_and_hitl:
+  price_variance_tolerance_pct: 0.02
+  quantity_variance_tolerance_pct: 0.0
+  tax_rate_tolerance_abs: 0.005
+  human_approval_amount_threshold_usd: 10000.0
+  human_approval_min_confidence: 0.80
+  max_extraction_schema_retries: 2
+  max_critic_sendbacks: 1
+
+storage:
+  # Local SQLite + NumPy cosine index in P1-P3; BigQuery tables + VECTOR_SEARCH in P4.
+  backend: "local_sqlite"
+  local_sqlite_path: "data/generated/invoiceops_local.sqlite3"
+  local_eval_runs_jsonl: "results/eval_runs.jsonl"
+  bigquery_dataset: "invoiceops"
+  bigquery_policy_table: "policy_clauses"
+  bigquery_eval_runs_table: "eval_runs"
+  top_k_clauses: 5
+
+mock_erp:
+  # Option A approved: Local MCP in P1-P3; Two Cloud Run services with IAM-authenticated
+  # private Streamable HTTP MCP in Phase P4.
+  topology: "streamable_http_mcp"
+  base_url: "http://127.0.0.1:8001/mcp"
+  require_cloud_run_iam_auth: false
+  flaky_mode: false
+  client_timeout_seconds: 5.0
+  max_retries: 3
+  circuit_breaker_failure_threshold: 5
+  circuit_breaker_recovery_seconds: 30.0
+
+evaluation:
+  random_seed: 42
+  dev_split_ratio: 0.60
+  test_split_ratio: 0.40
+  runs_per_experiment: 3
+  # Cost-weighted error matrix (Section 5: false approval is 10x worse than false escalation).
+  error_cost_weights:
+    false_approval: 10.0
+    false_rejection: 3.0
+    false_hold: 2.0
+    false_escalation: 1.0
