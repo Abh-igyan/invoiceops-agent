@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from invoiceops.agents.v0_baseline import V0BaselineEvaluatorAgent
+from invoiceops.agents.v1_multi_agent import V1MultiAgentEvaluator
 from invoiceops.config import DEFAULT_CONFIG_PATH, AppConfig, load_config
 from invoiceops.eval.adk_trajectory import export_and_score_adk_golden_subset
 from invoiceops.eval.html_report import generate_html_report
@@ -32,6 +33,7 @@ from invoiceops.mcp_erp.flaky import FlakyInjector, FlakySettings
 from invoiceops.mcp_erp.server import ErpDatabase
 from invoiceops.schemas import CaseEvalRecord, PolicyClause, SyntheticCase
 from invoiceops.storage.local_store import GeminiEmbedder, LocalSqliteStore, build_naive_chunks
+from invoiceops.telemetry.tracing import InvoiceOpsTelemetry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -197,6 +199,31 @@ async def run_evaluation(
     first_run_traces: dict[str, dict[str, Any]] = {}
     first_run_records: list[CaseEvalRecord] = []
 
+    telemetry = InvoiceOpsTelemetry(
+        config=cfg,
+        jsonl_trace_path=results_dir / "traces" / f"{version}_otel_spans.jsonl",
+        keep_in_memory=True,
+    )
+
+    def _make_agent(client: ResilientErpMcpClient) -> Any:
+        if version == "v0":
+            return V0BaselineEvaluatorAgent(
+                config=cfg,
+                store=store,
+                embed_query_fn=cached_embed_query,
+                erp_client=client,
+            )
+        if version == "v1":
+            return V1MultiAgentEvaluator(
+                config=cfg,
+                store=store,
+                embed_query_fn=cached_embed_query,
+                erp_client=client,
+                telemetry=telemetry,
+            )
+        msg = f"Unsupported experiment version '{version}'. Supported: ['v0', 'v1']"
+        raise ValueError(msg)
+
     flaky_clean = FlakyInjector(FlakySettings(enabled=False))
     async with running_local_erp_server(db=erp_db, flaky=flaky_clean) as mcp_url:
         erp_client = ResilientErpMcpClient(
@@ -208,12 +235,7 @@ async def run_evaluation(
                 recovery_seconds=cfg.mock_erp.circuit_breaker_recovery_seconds,
             ),
         )
-        agent_runner = V0BaselineEvaluatorAgent(
-            config=cfg,
-            store=store,
-            embed_query_fn=cached_embed_query,
-            erp_client=erp_client,
-        )
+        agent_runner = _make_agent(erp_client)
 
         for rep in range(1, num_runs + 1):
             print(f"[eval] Starting run {rep}/{num_runs} ...", flush=True)
@@ -392,12 +414,7 @@ async def run_evaluation(
                     recovery_seconds=cfg.mock_erp.circuit_breaker_recovery_seconds,
                 ),
             )
-            flaky_agent = V0BaselineEvaluatorAgent(
-                config=cfg,
-                store=store,
-                embed_query_fn=cached_embed_query,
-                erp_client=flaky_client,
-            )
+            flaky_agent = _make_agent(flaky_client)
             for g_case in flaky_sample:
                 f_trace = await flaky_agent.evaluate_invoice(
                     case_id=g_case.case_id,
@@ -472,6 +489,14 @@ async def run_evaluation(
         "flaky_erp_robustness_golden_12": flaky_summary,
         "llm_judge": judge_summary,
     }
+
+    if telemetry.jsonl_exporter.spans:
+        first_trace_id = telemetry.jsonl_exporter.spans[0]["trace_id"]
+        sample_spans = [
+            s for s in telemetry.jsonl_exporter.spans if s["trace_id"] == first_trace_id
+        ]
+        sample_path = results_dir / f"{version}_trace_sample.json"
+        sample_path.write_text(json.dumps(sample_spans, indent=2), encoding="utf-8")
 
     summary_file.write_text(json.dumps(final_artifact, indent=2), encoding="utf-8")
     report_html = generate_html_report(

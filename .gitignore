@@ -51,6 +51,7 @@ data/generated/
 *.sqlite3
 *.db
 results/raw/
+results/traces/*.jsonl
 
 # Terraform (Phase P4)
 **/.terraform/*

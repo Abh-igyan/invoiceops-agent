@@ -21,7 +21,18 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="invoiceops-agent task runner")
     parser.add_argument(
         "target",
-        choices=["lint", "format", "test", "check", "data", "eval", "erp", "deploy", "destroy"],
+        choices=[
+            "lint",
+            "format",
+            "test",
+            "check",
+            "data",
+            "eval",
+            "traces",
+            "erp",
+            "deploy",
+            "destroy",
+        ],
         help="Workflow target to execute",
     )
     parser.add_argument("--version", default="v0", help="Agent version to evaluate (default: v0)")
@@ -78,6 +89,22 @@ def main(argv: list[str] | None = None) -> int:
                 indent=2,
             )
         )
+        return 0
+
+    if args.target == "traces":
+        from invoiceops.data_gen.generator import REPO_ROOT
+
+        sample_file = REPO_ROOT / "results" / f"{args.version}_trace_sample.json"
+        if not sample_file.exists():
+            print(f"No trace sample found at {sample_file}. Run `eval --version {args.version}`.")
+            return 1
+        spans = json.loads(sample_file.read_text(encoding="utf-8"))
+        for sp in sorted(spans, key=lambda s: s["start_time_ns"]):
+            indent = "  " if sp["parent_span_id"] else ""
+            print(
+                f"{indent}[{sp['name']}] status={sp['status']} "
+                f"dur={sp['duration_ms']:.1f}ms attrs={sp['attributes']}"
+            )
         return 0
 
     if args.target == "erp":
