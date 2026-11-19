@@ -1,0 +1,247 @@
+[
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "588b53b34768472d",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.extraction_agent",
+    "status": "ERROR",
+    "start_time_ns": 1794987875971708400,
+    "end_time_ns": 1794987878895555100,
+    "duration_ms": 2923.847,
+    "attributes": {
+      "agent.name": "extraction_agent",
+      "gen_ai.request.model": "gemini-3.5-flash-lite"
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "9deeb37b40af0bd7",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.extraction_agent",
+    "status": "ERROR",
+    "start_time_ns": 1794987881409648800,
+    "end_time_ns": 1794987883807774600,
+    "duration_ms": 2398.126,
+    "attributes": {
+      "agent.name": "extraction_agent",
+      "gen_ai.request.model": "gemini-3.5-flash-lite"
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "4c45dd29105949b3",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.extraction_agent",
+    "status": "OK",
+    "start_time_ns": 1794987888825907800,
+    "end_time_ns": 1794987891990218600,
+    "duration_ms": 3164.311,
+    "attributes": {
+      "agent.name": "extraction_agent",
+      "gen_ai.request.model": "gemini-3.1-flash-lite",
+      "gen_ai.response.model": "gemini-3.1-flash-lite",
+      "gen_ai.usage.input_tokens": 853,
+      "gen_ai.usage.output_tokens": 348,
+      "invoiceops.estimated_cost_usd": 0.00073525,
+      "invoiceops.llm_calls": 1
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "58150221e9e8c584",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "tool.lookup_vendor",
+    "status": "OK",
+    "start_time_ns": 1794987891991975500,
+    "end_time_ns": 1794987892463348500,
+    "duration_ms": 471.373,
+    "attributes": {
+      "tool.name": "lookup_vendor",
+      "tool.retries": 0
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "9cffd5e4f93dc201",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "tool.check_invoice_history",
+    "status": "OK",
+    "start_time_ns": 1794987892465368600,
+    "end_time_ns": 1794987892501243400,
+    "duration_ms": 35.875,
+    "attributes": {
+      "tool.name": "check_invoice_history",
+      "tool.retries": 0
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "24245519df181f9f",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "tool.lookup_purchase_order",
+    "status": "OK",
+    "start_time_ns": 1794987892501243400,
+    "end_time_ns": 1794987892534053400,
+    "duration_ms": 32.81,
+    "attributes": {
+      "tool.name": "lookup_purchase_order",
+      "tool.retries": 0
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "c37901354ceed7b8",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "tool.lookup_goods_receipts",
+    "status": "OK",
+    "start_time_ns": 1794987892534053400,
+    "end_time_ns": 1794987892578209700,
+    "duration_ms": 44.156,
+    "attributes": {
+      "tool.name": "lookup_goods_receipts",
+      "tool.retries": 0
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "1cc4264779f28a74",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "tool.compute_three_way_match",
+    "status": "OK",
+    "start_time_ns": 1794987892632789800,
+    "end_time_ns": 1794987892632789800,
+    "duration_ms": 0.0,
+    "attributes": {
+      "tool.name": "compute_three_way_match",
+      "tool.retries": 0
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "41b5a4fee2fd2a58",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.policy_rag_agent",
+    "status": "ERROR",
+    "start_time_ns": 1794987892930182400,
+    "end_time_ns": 1794987896816018600,
+    "duration_ms": 3885.836,
+    "attributes": {
+      "agent.name": "policy_rag_agent",
+      "gen_ai.request.model": "gemini-3.5-flash-lite"
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "9a5427f94ff6bb8f",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.policy_rag_agent",
+    "status": "ERROR",
+    "start_time_ns": 1794987899303941000,
+    "end_time_ns": 1794987902433747400,
+    "duration_ms": 3129.806,
+    "attributes": {
+      "agent.name": "policy_rag_agent",
+      "gen_ai.request.model": "gemini-3.5-flash-lite"
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "d363e7c6637672eb",
+    "parent_span_id": "0ea37f52ff06a4ae",
+    "name": "tool.search_policy",
+    "status": "OK",
+    "start_time_ns": 1794987909894272200,
+    "end_time_ns": 1794987912064527900,
+    "duration_ms": 2170.256,
+    "attributes": {
+      "tool.name": "search_policy",
+      "tool.retries": 0
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "0ea37f52ff06a4ae",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.policy_rag_agent",
+    "status": "OK",
+    "start_time_ns": 1794987907427811200,
+    "end_time_ns": 1794987913785475800,
+    "duration_ms": 6357.665,
+    "attributes": {
+      "agent.name": "policy_rag_agent",
+      "gen_ai.request.model": "gemini-3.1-flash-lite",
+      "gen_ai.response.model": "gemini-3.1-flash-lite",
+      "gen_ai.usage.input_tokens": 2453,
+      "gen_ai.usage.output_tokens": 107,
+      "invoiceops.estimated_cost_usd": 0.00077375,
+      "invoiceops.llm_calls": 2
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "03fc2b6265238189",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.orchestrator_agent",
+    "status": "ERROR",
+    "start_time_ns": 1794987913787078300,
+    "end_time_ns": 1794987915949408000,
+    "duration_ms": 2162.33,
+    "attributes": {
+      "agent.name": "orchestrator_agent",
+      "gen_ai.request.model": "gemini-3.5-flash-lite"
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "3ff4d5dfdec7b4d7",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.orchestrator_agent",
+    "status": "ERROR",
+    "start_time_ns": 1794987918451580400,
+    "end_time_ns": 1794987920677274800,
+    "duration_ms": 2225.694,
+    "attributes": {
+      "agent.name": "orchestrator_agent",
+      "gen_ai.request.model": "gemini-3.5-flash-lite"
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "930e836ee7a706bb",
+    "parent_span_id": "f9bde50b40208694",
+    "name": "agent.orchestrator_agent",
+    "status": "OK",
+    "start_time_ns": 1794987925683883200,
+    "end_time_ns": 1794987929240711500,
+    "duration_ms": 3556.828,
+    "attributes": {
+      "agent.name": "orchestrator_agent",
+      "gen_ai.request.model": "gemini-3.1-flash-lite",
+      "gen_ai.response.model": "gemini-3.1-flash-lite",
+      "gen_ai.usage.input_tokens": 2237,
+      "gen_ai.usage.output_tokens": 169,
+      "invoiceops.estimated_cost_usd": 0.00081275,
+      "invoiceops.llm_calls": 1
+    }
+  },
+  {
+    "trace_id": "3c591e61a3191c142a485778fcaf4235",
+    "span_id": "f9bde50b40208694",
+    "parent_span_id": null,
+    "name": "invoiceops.resolve_invoice",
+    "status": "OK",
+    "start_time_ns": 1794987875963658100,
+    "end_time_ns": 1794987929242978900,
+    "duration_ms": 53279.321,
+    "attributes": {
+      "invoiceops.case_id": "INV-4246",
+      "invoiceops.vendor_id": "VEN-006",
+      "invoiceops.version": "v2",
+      "invoiceops.outcome": "reject",
+      "gen_ai.usage.input_tokens": 5543,
+      "gen_ai.usage.output_tokens": 624,
+      "invoiceops.estimated_cost_usd": 0.00232175,
+      "invoiceops.erp_retries": 0
+    }
+  }
+]

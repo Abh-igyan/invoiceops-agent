@@ -12,6 +12,12 @@ from typing import Any
 
 from invoiceops.agents.v0_baseline import V0BaselineEvaluatorAgent
 from invoiceops.agents.v1_multi_agent import V1MultiAgentEvaluator
+from invoiceops.agents.v2_hybrid_retrieval import (
+    V2HybridRetrievalEvaluator,
+    run_retrieval_strategy_ablation,
+)
+from invoiceops.agents.v3_cost_latency import V3CostLatencyEvaluator, V3NegativeAllLiteEvaluator
+from invoiceops.agents.v4_critic_reliability import V4CriticReliabilityEvaluator
 from invoiceops.config import DEFAULT_CONFIG_PATH, AppConfig, load_config
 from invoiceops.eval.adk_trajectory import export_and_score_adk_golden_subset
 from invoiceops.eval.html_report import generate_html_report
@@ -32,7 +38,12 @@ from invoiceops.mcp_erp.client import (
 from invoiceops.mcp_erp.flaky import FlakyInjector, FlakySettings
 from invoiceops.mcp_erp.server import ErpDatabase
 from invoiceops.schemas import CaseEvalRecord, PolicyClause, SyntheticCase
-from invoiceops.storage.local_store import GeminiEmbedder, LocalSqliteStore, build_naive_chunks
+from invoiceops.storage.local_store import (
+    GeminiEmbedder,
+    LocalSqliteStore,
+    build_naive_chunks,
+    build_semantic_clause_chunks,
+)
 from invoiceops.telemetry.tracing import InvoiceOpsTelemetry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -161,9 +172,11 @@ async def run_evaluation(
         overlap_chars=cfg.storage.naive_chunk_overlap_chars,
     )
     newly_embedded = store.index_naive_chunks(naive_chunks, embed_fn=embedder.embed_texts)
+    semantic_chunks = build_semantic_clause_chunks(policies_manifest_path=policies_manifest_path)
+    newly_semantic = store.index_semantic_clauses(semantic_chunks, embed_fn=embedder.embed_texts)
     print(
-        f"[eval] Policy index ready: {len(naive_chunks)} naive chunks "
-        f"({newly_embedded} newly embedded).",
+        f"[eval] Policy indexes ready: {len(naive_chunks)} naive ({newly_embedded} new), "
+        f"{len(semantic_chunks)} semantic clauses ({newly_semantic} new).",
         flush=True,
     )
 
@@ -221,7 +234,42 @@ async def run_evaluation(
                 erp_client=client,
                 telemetry=telemetry,
             )
-        msg = f"Unsupported experiment version '{version}'. Supported: ['v0', 'v1']"
+        if version == "v2":
+            return V2HybridRetrievalEvaluator(
+                config=cfg,
+                store=store,
+                embed_query_fn=cached_embed_query,
+                erp_client=client,
+                telemetry=telemetry,
+            )
+        if version == "v3":
+            return V3CostLatencyEvaluator(
+                config=cfg,
+                store=store,
+                embed_query_fn=cached_embed_query,
+                erp_client=client,
+                telemetry=telemetry,
+            )
+        if version == "v3_negative":
+            return V3NegativeAllLiteEvaluator(
+                config=cfg,
+                store=store,
+                embed_query_fn=cached_embed_query,
+                erp_client=client,
+                telemetry=telemetry,
+            )
+        if version == "v4":
+            return V4CriticReliabilityEvaluator(
+                config=cfg,
+                store=store,
+                embed_query_fn=cached_embed_query,
+                erp_client=client,
+                telemetry=telemetry,
+            )
+        msg = (
+            f"Unsupported experiment version '{version}'. "
+            "Supported: ['v0', 'v1', 'v2', 'v3', 'v3_negative', 'v4']"
+        )
         raise ValueError(msg)
 
     flaky_clean = FlakyInjector(FlakySettings(enabled=False))
@@ -475,6 +523,29 @@ async def run_evaluation(
             "agent_explanation_pass_rate": explanation_pass_rate,
         }
 
+    retrieval_ablation: dict[str, Any] | None = None
+    if version == "v2":
+        retrieval_ablation = {
+            "golden_12": run_retrieval_strategy_ablation(
+                store=store,
+                cases=[all_cases[cid] for cid in split_data["golden_12_ids"]],
+                embed_query_fn=cached_embed_query,
+                top_k=cfg.storage.top_k_clauses,
+            ),
+            "dev_240": run_retrieval_strategy_ablation(
+                store=store,
+                cases=[all_cases[cid] for cid in split_data["dev_case_ids"]],
+                embed_query_fn=cached_embed_query,
+                top_k=cfg.storage.top_k_clauses,
+            ),
+            "test_160": run_retrieval_strategy_ablation(
+                store=store,
+                cases=[all_cases[cid] for cid in split_data["test_case_ids"]],
+                embed_query_fn=cached_embed_query,
+                top_k=cfg.storage.top_k_clauses,
+            ),
+        }
+
     final_artifact = {
         "run_id": batch_run_id,
         "experiment_version": version,
@@ -489,6 +560,8 @@ async def run_evaluation(
         "flaky_erp_robustness_golden_12": flaky_summary,
         "llm_judge": judge_summary,
     }
+    if retrieval_ablation is not None:
+        final_artifact["retrieval_strategy_ablation"] = retrieval_ablation
 
     if telemetry.jsonl_exporter.spans:
         first_trace_id = telemetry.jsonl_exporter.spans[0]["trace_id"]

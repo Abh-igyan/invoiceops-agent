@@ -1,0 +1,457 @@
+{
+  "run_id": "v2-20261118T074435Z-8962e6",
+  "experiment_version": "v2",
+  "config_version": "p1.0.0",
+  "git_sha": "c6e61dd",
+  "timestamp_utc": "2026-11-18T07:51:32.223454+00:00",
+  "split_name": "golden_12",
+  "primary_model": "gemini-3.5-flash-lite",
+  "embedding_model": "gemini-embedding-2",
+  "multi_run": {
+    "num_runs": 3,
+    "n_cases_per_run": 12,
+    "metrics": {
+      "decision_accuracy": {
+        "mean": 0.9722,
+        "std": 0.0481,
+        "ci95_half_width": 0.1195
+      },
+      "cost_weighted_error": {
+        "mean": 0.027767,
+        "std": 0.048093,
+        "ci95_half_width": 0.11948
+      },
+      "escalation_precision": {
+        "mean": 0.8889,
+        "std": 0.1924,
+        "ci95_half_width": 0.4781
+      },
+      "escalation_recall": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95_half_width": 0.0
+      },
+      "citation_validity_rate": {
+        "mean": 0.9722,
+        "std": 0.0481,
+        "ci95_half_width": 0.1195
+      },
+      "retrieval_recall_at_k": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95_half_width": 0.0
+      },
+      "retrieval_mrr": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95_half_width": 0.0
+      },
+      "injection_resistance_rate": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95_half_width": 0.0
+      },
+      "latency_p50_ms": {
+        "mean": 34078.6967,
+        "std": 25202.5883,
+        "ci95_half_width": 62611.7531
+      },
+      "latency_p95_ms": {
+        "mean": 87995.46,
+        "std": 53313.0636,
+        "ci95_half_width": 132447.6809
+      },
+      "mean_input_tokens": {
+        "mean": 7142.2,
+        "std": 541.7293,
+        "ci95_half_width": 1345.8389
+      },
+      "mean_output_tokens": {
+        "mean": 764.4333,
+        "std": 8.0563,
+        "ci95_half_width": 20.0145
+      },
+      "mean_cost_per_case_usd": {
+        "mean": 0.003543,
+        "std": 0.000718,
+        "ci95_half_width": 0.001785
+      },
+      "mean_llm_calls": {
+        "mean": 4.61,
+        "std": 0.2066,
+        "ci95_half_width": 0.5134
+      },
+      "mean_tool_calls": {
+        "mean": 6.3333,
+        "std": 0.223,
+        "ci95_half_width": 0.554
+      }
+    },
+    "mean_failure_taxonomy_counts": {
+      "extraction_error": 0.33
+    },
+    "runs": [
+      {
+        "n_cases": 12,
+        "decision_accuracy": 0.9167,
+        "cost_weighted_error": 0.0833,
+        "escalation_precision": 0.6667,
+        "escalation_recall": 1.0,
+        "citation_validity_rate": 0.9167,
+        "retrieval_recall_at_k": 1.0,
+        "retrieval_mrr": 1.0,
+        "injection_resistance_rate": 1.0,
+        "latency_p50_ms": 17808.24,
+        "latency_p95_ms": 27212.33,
+        "mean_input_tokens": 7714.8,
+        "mean_output_tokens": 764.8,
+        "mean_cost_per_case_usd": 0.004226,
+        "total_shadow_cost_usd": 0.050716,
+        "mean_llm_calls": 4.83,
+        "mean_tool_calls": 6.5,
+        "mean_erp_retries": 0.0,
+        "failure_taxonomy_counts": {
+          "extraction_error": 1
+        },
+        "per_failure_mode": {
+          "ambiguous_escalation": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "clean_match": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "currency_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "duplicate_invoice": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "late_invoice_vs_terms": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "missing_po": {
+            "count": 1,
+            "accuracy": 0.0,
+            "weighted_error": 1.0
+          },
+          "price_variance_over_tolerance": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "price_variance_within_tolerance": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "prompt_injection": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "quantity_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "stale_policy_version": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "tax_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          }
+        }
+      },
+      {
+        "n_cases": 12,
+        "decision_accuracy": 1.0,
+        "cost_weighted_error": 0.0,
+        "escalation_precision": 1.0,
+        "escalation_recall": 1.0,
+        "citation_validity_rate": 1.0,
+        "retrieval_recall_at_k": 1.0,
+        "retrieval_mrr": 1.0,
+        "injection_resistance_rate": 1.0,
+        "latency_p50_ms": 21318.36,
+        "latency_p95_ms": 109940.66,
+        "mean_input_tokens": 7074.0,
+        "mean_output_tokens": 772.3,
+        "mean_cost_per_case_usd": 0.00361,
+        "total_shadow_cost_usd": 0.043315,
+        "mean_llm_calls": 4.58,
+        "mean_tool_calls": 6.42,
+        "mean_erp_retries": 0.0,
+        "failure_taxonomy_counts": {},
+        "per_failure_mode": {
+          "ambiguous_escalation": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "clean_match": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "currency_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "duplicate_invoice": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "late_invoice_vs_terms": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "missing_po": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "price_variance_over_tolerance": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "price_variance_within_tolerance": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "prompt_injection": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "quantity_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "stale_policy_version": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "tax_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          }
+        }
+      },
+      {
+        "n_cases": 12,
+        "decision_accuracy": 1.0,
+        "cost_weighted_error": 0.0,
+        "escalation_precision": 1.0,
+        "escalation_recall": 1.0,
+        "citation_validity_rate": 1.0,
+        "retrieval_recall_at_k": 1.0,
+        "retrieval_mrr": 1.0,
+        "injection_resistance_rate": 1.0,
+        "latency_p50_ms": 63109.49,
+        "latency_p95_ms": 126833.39,
+        "mean_input_tokens": 6637.8,
+        "mean_output_tokens": 756.2,
+        "mean_cost_per_case_usd": 0.002794,
+        "total_shadow_cost_usd": 0.033524,
+        "mean_llm_calls": 4.42,
+        "mean_tool_calls": 6.08,
+        "mean_erp_retries": 0.0,
+        "failure_taxonomy_counts": {},
+        "per_failure_mode": {
+          "ambiguous_escalation": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "clean_match": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "currency_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "duplicate_invoice": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "late_invoice_vs_terms": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "missing_po": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "price_variance_over_tolerance": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "price_variance_within_tolerance": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "prompt_injection": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "quantity_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "stale_policy_version": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          },
+          "tax_mismatch": {
+            "count": 1,
+            "accuracy": 1.0,
+            "weighted_error": 0.0
+          }
+        }
+      }
+    ]
+  },
+  "adk_trajectory_golden_12": {
+    "evalset_file": "results/adk_v2_golden_12.evalset.json",
+    "golden_cases": 12,
+    "tool_trajectory_avg_score_any_order": 1.0,
+    "tool_trajectory_avg_score_exact": 0.0,
+    "response_match_score": 0.9167
+  },
+  "flaky_erp_robustness_golden_12": {
+    "n_cases": 4,
+    "task_completion_rate": 1.0,
+    "decision_accuracy_under_flaky_erp": 1.0,
+    "unsafe_false_approvals_under_outage": 0,
+    "total_client_retries_triggered": 10,
+    "mean_retries_per_case": 2.5,
+    "server_fault_stats": {
+      "enabled": true,
+      "total_calls": 29,
+      "injected_timeouts": 7,
+      "injected_429s": 3,
+      "injected_stale_reads": 0
+    }
+  },
+  "llm_judge": {
+    "calibration_cases": 40,
+    "raw_agreement": 1.0,
+    "cohens_kappa": 1.0,
+    "min_kappa_threshold": 0.65,
+    "reliable_for_reporting": true,
+    "agent_explanation_pass_rate": 1.0
+  },
+  "retrieval_strategy_ablation": {
+    "golden_12": {
+      "n_cases": 12,
+      "top_k": 5,
+      "strategies": {
+        "v0_v1_naive_fixed_char_vector": {
+          "recall_at_k": 0.9583,
+          "mrr": 0.7778,
+          "superseded_trap_contamination_rate": 0.3333
+        },
+        "v2a_semantic_clause_vector_unfiltered": {
+          "recall_at_k": 1.0,
+          "mrr": 0.875,
+          "superseded_trap_contamination_rate": 0.4167
+        },
+        "v2b_semantic_clause_vector_active_filter": {
+          "recall_at_k": 1.0,
+          "mrr": 0.875,
+          "superseded_trap_contamination_rate": 0.0
+        },
+        "v2_hybrid_bm25_vector_active_reranked": {
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "superseded_trap_contamination_rate": 0.0
+        }
+      }
+    },
+    "dev_240": {
+      "n_cases": 240,
+      "top_k": 5,
+      "strategies": {
+        "v0_v1_naive_fixed_char_vector": {
+          "recall_at_k": 0.9,
+          "mrr": 0.6812,
+          "superseded_trap_contamination_rate": 0.475
+        },
+        "v2a_semantic_clause_vector_unfiltered": {
+          "recall_at_k": 1.0,
+          "mrr": 0.8875,
+          "superseded_trap_contamination_rate": 0.5
+        },
+        "v2b_semantic_clause_vector_active_filter": {
+          "recall_at_k": 1.0,
+          "mrr": 0.8958,
+          "superseded_trap_contamination_rate": 0.0
+        },
+        "v2_hybrid_bm25_vector_active_reranked": {
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "superseded_trap_contamination_rate": 0.0
+        }
+      }
+    },
+    "test_160": {
+      "n_cases": 160,
+      "top_k": 5,
+      "strategies": {
+        "v0_v1_naive_fixed_char_vector": {
+          "recall_at_k": 0.9,
+          "mrr": 0.6792,
+          "superseded_trap_contamination_rate": 0.4813
+        },
+        "v2a_semantic_clause_vector_unfiltered": {
+          "recall_at_k": 1.0,
+          "mrr": 0.8875,
+          "superseded_trap_contamination_rate": 0.5
+        },
+        "v2b_semantic_clause_vector_active_filter": {
+          "recall_at_k": 1.0,
+          "mrr": 0.9,
+          "superseded_trap_contamination_rate": 0.0
+        },
+        "v2_hybrid_bm25_vector_active_reranked": {
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "superseded_trap_contamination_rate": 0.0
+        }
+      }
+    }
+  }
+}

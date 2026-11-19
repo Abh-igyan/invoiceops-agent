@@ -7,7 +7,11 @@ from pathlib import Path
 from invoiceops.data_gen.pdf_renderer import render_invoice_pdf
 from invoiceops.data_gen.policies import build_policy_corpus, write_policy_files
 from invoiceops.schemas import CaseEvalRecord, InvoiceDocument, InvoiceLineItem
-from invoiceops.storage.local_store import LocalSqliteStore, build_naive_chunks
+from invoiceops.storage.local_store import (
+    LocalSqliteStore,
+    build_naive_chunks,
+    build_semantic_clause_chunks,
+)
 
 
 def test_policy_corpus_has_15_docs_and_superseded_versions() -> None:
@@ -140,3 +144,55 @@ def test_local_sqlite_naive_vector_search_and_caching(tmp_path: Path) -> None:
     store.record_eval_case(rec)
     assert jsonl_path.exists()
     assert "INV-4001" in jsonl_path.read_text(encoding="utf-8")
+
+
+def test_semantic_clause_chunking_and_v2_hybrid_search(tmp_path: Path) -> None:
+    """Verify atomic clause chunking, active-version metadata filter, and BM25+vector+rerank."""
+    import json
+
+    clauses, _ = build_policy_corpus()
+    manifest_path = tmp_path / "policies_manifest.json"
+    manifest_path.write_text(
+        json.dumps([c.model_dump() for c in clauses], indent=2),
+        encoding="utf-8",
+    )
+    sem_chunks = build_semantic_clause_chunks(manifest_path)
+    assert len(sem_chunks) == len(clauses) == 25
+
+    def fake_embed(texts: list[str]) -> list[list[float]]:
+        vecs: list[list[float]] = []
+        for t in texts:
+            tl = t.lower()
+            vecs.append(
+                [
+                    1.0 if "price" in tl or "variance" in tl else 0.1,
+                    1.0 if "late" in tl or "60" in tl or "90" in tl else 0.1,
+                    1.0 if "duplicate" in tl else 0.1,
+                ]
+            )
+        return vecs
+
+    store = LocalSqliteStore(db_path=tmp_path / "v2.sqlite3")
+    newly = store.index_semantic_clauses(sem_chunks, embed_fn=fake_embed)
+    assert newly == 25
+    assert store.index_semantic_clauses(sem_chunks, embed_fn=fake_embed) == 0
+
+    # Unfiltered vector search can surface superseded V1 clauses
+    unfiltered_hits = store.search_semantic_vector([1.0, 0.0, 0.0], top_k=10, active_only=False)
+    assert any(h.status == "superseded" for h in unfiltered_hits)
+
+    # Active-only filter strictly excludes superseded V1 clauses
+    active_hits = store.search_semantic_vector([1.0, 0.0, 0.0], top_k=10, active_only=True)
+    assert all(h.status == "active" for h in active_hits)
+    assert all("-V1#" not in h.clause_ids[0] for h in active_hits)
+
+    # Hybrid v2 ranks exact topic + clause match at rank 1
+    hybrid_hits = store.search_hybrid_v2(
+        query_vector=[0.1, 1.0, 0.1],
+        query_text="late_invoice_submission timeliness days 60 POL-09-V2#1",
+        top_k=5,
+        active_only=True,
+    )
+    assert len(hybrid_hits) == 5
+    assert hybrid_hits[0].clause_ids == ["POL-09-V2#1"]
+    assert all(h.status == "active" for h in hybrid_hits)

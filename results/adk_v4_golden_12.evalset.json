@@ -1,0 +1,1192 @@
+{
+  "eval_set_id": "invoiceops_golden_12",
+  "name": "InvoiceOps Golden 12 Trajectory Set",
+  "description": "12-case stratified golden subset (1 per failure mode) for ADK trajectory eval",
+  "eval_cases": [
+    {
+      "eval_id": "INV-4002",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4002",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4002 for VEN-002",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "approve",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_goods_receipts",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4081",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4081",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4081 for VEN-001",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "approve",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_goods_receipts",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4111",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4111",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4111 for VEN-031",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "reject",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4152",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4152",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4152 for VEN-032",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "hold",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_goods_receipts",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "place_payment_hold",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4186",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4186",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4186 for VEN-026",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "reject",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "check_invoice_history",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4219",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4219",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4219 for VEN-019",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "reject",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4246",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4246",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4246 for VEN-006",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "reject",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4275",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4275",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4275 for VEN-035",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "hold",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "place_payment_hold",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4301",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4301",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4301 for VEN-021",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "hold",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_goods_receipts",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "place_payment_hold",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4326",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4326",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4326 for VEN-006",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "escalate_to_human",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_goods_receipts",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4352",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4352",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4352 for VEN-032",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "escalate_to_human",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_purchase_order",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_goods_receipts",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    },
+    {
+      "eval_id": "INV-4377",
+      "conversation": [
+        {
+          "invocation_id": "exp-INV-4377",
+          "user_content": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "Resolve INV-4377 for VEN-017",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "media_resolution": null,
+                "code_execution_result": null,
+                "executable_code": null,
+                "file_data": null,
+                "function_call": null,
+                "function_response": null,
+                "inline_data": null,
+                "text": "reject",
+                "thought": null,
+                "thought_signature": null,
+                "video_metadata": null,
+                "tool_call": null,
+                "tool_response": null,
+                "part_metadata": null,
+                "audio_transcription": null,
+                "media_processing": null,
+                "speech_metadata": null
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "id": null,
+                "args": {},
+                "name": "lookup_vendor",
+                "partial_args": null,
+                "will_continue": null
+              },
+              {
+                "id": null,
+                "args": {},
+                "name": "search_policy",
+                "partial_args": null,
+                "will_continue": null
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "creation_timestamp": 0.0,
+          "duration": null,
+          "model_duration": null,
+          "tool_duration": null,
+          "rubrics": null,
+          "app_details": null
+        }
+      ],
+      "conversation_scenario": null,
+      "session_input": null,
+      "creation_timestamp": 0.0,
+      "rubrics": null,
+      "final_session_state": {}
+    }
+  ],
+  "creation_timestamp": 0.0
+}
