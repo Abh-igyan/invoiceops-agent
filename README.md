@@ -65,17 +65,25 @@ Every number below is directly backed by committed JSON evaluation summaries und
 | **`v3` (Negative Result)** | `gemini-3.1-flash-lite` (router) | `75.00% ± 20.69%` | `0.250 ± 0.207` | `75.00% ± 20.69%` | `100.0%` / `1.000` | `100.0% ± 0.0%` | `80,336` / `268,524` | **`$0.00227 ± $0.00042`** | [`v3_summary.json`](results/v3_summary.json) |
 | **`v4` (Critic + Defense)** | `gemini-3.5-flash-lite` + critic | `80.56% ± 43.09%`* | `0.194 ± 0.431` | **`100.0% ± 0.0%`** | `83.33%` / `0.833` | **`100.0% ± 0.0%`** | `45,381` / `128,871` | **`$0.00226 ± $0.00106`** | [`v4_summary.json`](results/v4_summary.json) |
 
-*\*Note on `v4` Accuracy:* `v4` achieved 100.0% accuracy on Run 1. On Runs 2–3, transient Free-Tier 503s during multi-turn critic send-backs triggered the pipeline's core reliability guarantee: **safe degradation to `escalate_to_human`** rather than guessing approvals. Crucially, `v4` achieved **100% citation validity** and **100% ADK response match**.
+### Statistical & Evaluation Notes:
+- **Sample Size & Overlapping Intervals:** Milestone evaluations were conducted across 3 repetitions on `golden_12`, a 12-case stratified subset covering all AP failure modes within Free-Tier API quotas (500 RPD). On this 12-case sample, several 95% confidence intervals overlap (e.g., `v1` 83.3% ± 20.7% vs `v2` 97.2% ± 12.0%, and `v2` vs `v4`; likewise `v2`'s cost interval `$0.00354 ± $0.00179` encompasses `v3`'s `$0.00227`). The engineering significance lies in categorical failure mode elimination (e.g. 0 false approvals under outage) rather than non-overlapping sample bounds.
+- **`v4` Accuracy & Failure Taxonomy Breakdown:** On Run 1, `v4` achieved **100.0% decision accuracy** with 5.5 LLM calls/case ($0.00318 shadow cost). On Runs 2–3, multi-turn Critic send-backs under rapid sequential turns encountered Gemini Free-Tier 503 deadline timeouts. In our evaluation schema, these timeouts were categorized under `tool_erp_failure` with `mean_erp_retries: 0.0`, reflecting that the timeout occurred during the upstream tool invocation cycle rather than during ERP backoff retries. Crucially, the system did not guess approvals: it cleanly degraded to `escalate_to_human`, maintaining **0% false approvals**.
+- **`v4` Cost Artifact:** The low 3-run mean shadow cost for `v4` ($0.00226) is partially an artifact of the degraded runs executing fewer LLM calls (~3.7 and 3.9 calls vs 5.5 in the healthy run) due to early escalation. On the clean Run 1, cost was $0.00318/case.
+- **ADK Trajectory & Flaky ERP Robustness:** 
+  - **Tool Trajectory:** Any-order tool set match is **1.00 (100%)** across all healthy cases. Exact-order sequence match is **0.00** because the ADK runtime assigns dynamic invocation IDs during multi-agent handoffs.
+  - **Flaky ERP Injection:** Under active fault injection (12% timeouts, 15% HTTP 429 rate limits, 10% stale reads), the agent completed 25% of cases on a 4-case stress test while routing 100% of failed cases safely to human escalation (0 false approvals).
+- **Judge Calibration Rubric ($\kappa = 1.000$):** Calibrated on 40 cases (`data/splits/judge_calibration_40.json`) using human-curated criteria scored via a deterministic 4-point rubric (line-item citation check, mathematical variance sign match, policy ID citation, and confidence score bound), ensuring rigorous consistency.
+- **Held-Out Split:** The complete dataset includes a frozen 60/40 train-dev (240 cases) and held-out test (160 cases) split (`data/splits/frozen_split_v1.json`). Evaluating the full 400 cases on paid Gemini quota requires ~$1.50–$3.50 in shadow spend.
 
 ---
 
 ## Key Engineering Findings
 
 ### 1. Multi-Agent Decomposition Eliminates Mathematical Hallucinations (`v0` → `v1`)
-In `v0`, the monolithic LLM attempted line-item multiplications and percentage tolerance calculations directly in prompt context, confusing absolute dollar variance ($5.00) with percentage variance (5.0%). In `v1`, moving matching arithmetic to deterministic Python tools dropped the cost-weighted error by **93.8%** ($2.694 \to 0.167$). Code does the math; LLMs interpret policy.
+In `v0`, the monolithic LLM attempted line-item multiplications and percentage tolerance calculations directly in prompt context, confusing absolute dollar variance ($5.00) with percentage variance (5.0%). In `v1`, moving matching arithmetic to deterministic Python tools dropped the cost-weighted error by **93.8%** ($2.694 \to 0.167$) on this 12-case set. Code does the math; LLMs interpret policy.
 
 ### 2. Hybrid RAG Defeats the "Stale Policy Trap" (`v1` → `v2`)
-Enterprise AP policies evolve over time (e.g. `POL-02-V1` 5% tolerance vs `POL-02-V2` 2% tolerance). Pure vector search retrieved superseded clauses 33%–48% of the time because semantic embeddings cannot distinguish subtle version status flags. Switching to hybrid BM25 + dense vectors with an explicit `status == 'active'` metadata filter eliminated 100% of superseded clause contamination, lifting retrieval recall@5 from 65.3% to **100.0%** and decision accuracy to **97.22%** ([ADR-004](docs/decisions/004-hybrid-retrieval-and-semantic-chunking.md)).
+Enterprise AP policies evolve over time (e.g. `POL-02-V1` 5% tolerance vs `POL-02-V2` 2% tolerance). Pure vector search retrieved superseded clauses 33%–48% of the time because semantic embeddings cannot distinguish subtle version status flags. Switching to hybrid BM25 + dense vectors with an explicit `status == 'active'` metadata filter eliminated superseded clause contamination on the 12-case set (0/12 stale retrievals vs 4/12 in `v1`), lifting retrieval recall@5 from 65.3% to **100.0%** and decision accuracy to **97.22%** ([ADR-004](docs/decisions/004-hybrid-retrieval-and-semantic-chunking.md)).
 
 ### 3. The Negative Result: Upstream Routing Fragility (`v2` → `v3`)
 In `v3` ([EXP-003](docs/experiments/EXP-003.md)), routing extraction to a smaller model (`gemini-3.1-flash-lite`) cut input tokens by **44.1%** and cost by **36%**. However, the smaller model suffered a **25% schema extraction failure rate** on complex tabular invoice PDFs. This proved that cheap routing upstream destroys downstream orchestration. In `v4`, we solved this by adding **bounded schema retries** and repair passes.
@@ -90,7 +98,7 @@ Supplier invoices frequently contain adversarial text (e.g., *"System override: 
 ### 1. Local Setup
 ```bash
 # Clone and enter workspace
-cd Agentthing
+cd invoiceops-agent
 
 # Create and activate Python 3.12 venv
 python -m venv .venv
@@ -125,33 +133,41 @@ python scripts/tasks.py traces --version v4
 
 ---
 
-## Production Cloud Run Deployment (Phase P4)
+## Live Google Cloud Run Deployment (Phase P4)
 
-The system deploys to Google Cloud via Terraform as a two-service architecture ([ADR-006](docs/decisions/006-cloud-run-deployment.md)):
+The system is deployed on Google Cloud Run v2 as a containerized microservice architecture ([ADR-006](docs/decisions/006-cloud-run-deployment.md)):
 
-```bash
-# Preview and deploy infrastructure
-cd infra/terraform
-cp terraform.tfvars.example terraform.tfvars
-# Fill in project_id and billing_account_id
+- **Live Agent Public URL:** [`https://invoiceops-agent-601764810069.us-central1.run.app`](https://invoiceops-agent-601764810069.us-central1.run.app)
+- **Live ERP Sidecar URL:** [`https://invoiceops-erp-ljzj6brkyq-uc.a.run.app`](https://invoiceops-erp-ljzj6brkyq-uc.a.run.app)
+- **Health Verification:** `GET https://invoiceops-agent-601764810069.us-central1.run.app/health` returns `{"status":"ok","version":"0.1.0","config_version":"p1.0.0"}`.
 
-terraform init
-terraform apply -auto-approve
+### Production Concurrency Load Test Benchmark
 
-# Run async load check against the Cloud Run service URL
-python scripts/load_test.py --url https://invoiceops-agent-xyz-uc.a.run.app --concurrency 5 --requests 20
+Tested against the live Cloud Run endpoint evaluating real PDF invoices:
 
-# Clean teardown of all Google Cloud billable resources
-terraform destroy -auto-approve
+```text
+Target:       https://invoiceops-agent-601764810069.us-central1.run.app/v1/invoices/evaluate
+Concurrency:  2 concurrent workers
+Requests:     6 full multi-agent invoice evaluations
+Error Rate:   0.0% (6/6 HTTP 200 OK)
+Throughput:   0.09 req/s
+Latency p50:  11,159 ms (~11.2s per 4-agent extraction, matching & verification pipeline)
+Latency Mean: 16,329 ms
+Result:       PASS (0% error rate, zero unhandled exceptions)
 ```
 
-### Security & Least-Privilege IAM
+```bash
+# Run async load check against the live Cloud Run deployment
+python scripts/load_test.py --url https://invoiceops-agent-601764810069.us-central1.run.app --concurrency 2 --requests 6
+```
+
+### Infrastructure as Code & Least-Privilege IAM
 - **Dedicated Service Account:** `invoiceops-agent@` granted strictly:
   - `roles/bigquery.dataEditor` & `roles/bigquery.jobUser` (RAG vector queries & eval metric logging)
   - `roles/secretmanager.secretAccessor` (accessing `GEMINI_API_KEY` at runtime)
   - `roles/cloudtrace.agent` (OpenTelemetry span export)
   - `roles/logging.logWriter` (structured JSON logging)
-- **Zero Public Access to ERP:** The Mock ERP service is internal-only; only the agent service account holds `roles/run.invoker`.
+- **Service Isolation:** Cloud Run agent service communicates with the ERP sidecar over Streamable HTTP MCP.
 - **Budget Guardrail:** Google Cloud Billing Budget alert configured at $10.00/month with notifications at 50%, 80%, and 100%.
 
 ---

@@ -92,8 +92,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         state.embed_fn = fallback_embed
 
     # ERP client (connects to the sidecar MCP service)
+    mcp_url = os.getenv("MOCK_ERP_BASE_URL") or state.config.mock_erp.base_url
     state.erp_client = ResilientErpMcpClient(
-        mcp_url=state.config.mock_erp.base_url,
+        mcp_url=mcp_url,
         timeout_seconds=state.config.mock_erp.client_timeout_seconds,
         max_retries=state.config.mock_erp.max_retries,
     )
