@@ -5,8 +5,12 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import shutil
 import subprocess
 import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _run(cmd: list[str]) -> int:
@@ -121,11 +125,29 @@ def main(argv: list[str] | None = None) -> int:
         uvicorn.run(create_erp_app(db=db, flaky=flaky), host="127.0.0.1", port=8001)
         return 0
 
-    phase_map = {
-        "deploy": "Phase P4 (Terraform + Cloud Run two-service deployment)",
-        "destroy": "Phase P4 (Terraform teardown of all billable Google Cloud resources)",
-    }
-    print(f"[P1 stub] `{args.target}` is scheduled for {phase_map[args.target]}.")
+    if args.target == "deploy":
+        tf_dir = REPO_ROOT / "infra" / "terraform"
+        if not shutil.which("terraform"):
+            print(
+                f"[deploy] Terraform CLI not found in PATH.\n"
+                f"Infrastructure configs are prepared in {tf_dir}.\n"
+                f"Run `terraform -chdir={tf_dir} init && terraform -chdir={tf_dir} apply`."
+            )
+            return 1
+        return _run(["terraform", f"-chdir={tf_dir}", "init"]) or _run(
+            ["terraform", f"-chdir={tf_dir}", "apply", "-auto-approve"]
+        )
+
+    if args.target == "destroy":
+        tf_dir = REPO_ROOT / "infra" / "terraform"
+        if not shutil.which("terraform"):
+            print(
+                f"[destroy] Terraform CLI not found in PATH.\n"
+                f"Run `terraform -chdir={tf_dir} destroy` in an authenticated environment."
+            )
+            return 1
+        return _run(["terraform", f"-chdir={tf_dir}", "destroy", "-auto-approve"])
+
     return 0
 
 

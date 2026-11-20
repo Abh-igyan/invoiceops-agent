@@ -1,0 +1,90 @@
+name: Full Evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Agent version to evaluate (v0, v1, v2, v3, v4)"
+        required: true
+        default: "v4"
+        type: choice
+        options:
+          - v0
+          - v1
+          - v2
+          - v3
+          - v4
+      split:
+        description: "Dataset split to evaluate on"
+        required: true
+        default: "golden_12"
+        type: choice
+        options:
+          - golden_12
+          - dev_stratified_24
+          - dev
+          - test
+      runs:
+        description: "Number of evaluation repetitions"
+        required: false
+        default: "3"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    name: "Eval ${{ inputs.version }} on ${{ inputs.split }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[eval]"
+
+      - name: Generate dataset
+        run: python scripts/tasks.py data
+
+      - name: Run evaluation
+        run: |
+          python scripts/tasks.py eval \
+            --version ${{ inputs.version }} \
+            --split ${{ inputs.split }} \
+            --runs ${{ inputs.runs }}
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results-${{ inputs.version }}-${{ inputs.split }}
+          path: |
+            results/${{ inputs.version }}_summary.json
+            results/eval_runs.jsonl
+            results/report.html
+          retention-days: 30
+
+      - name: Check accuracy threshold
+        run: |
+          python -c "
+          import json, sys
+          with open('results/${{ inputs.version }}_summary.json') as f:
+              data = json.load(f)
+          acc = data['metrics']['decision_accuracy']['mean']
+          print(f'Accuracy: {acc:.4f}')
+          if acc < 0.60:
+              print('FAIL: Accuracy below 60% threshold')
+              sys.exit(1)
+          print('PASS: Accuracy above threshold')
+          "

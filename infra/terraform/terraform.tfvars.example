@@ -1,0 +1,13 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# Do NOT commit terraform.tfvars (it is .gitignored).
+
+project_id         = "my-invoiceops-project"
+project_number     = "123456789012"
+billing_account_id = "AAAAAA-BBBBBB-CCCCCC"
+region             = "us-central1"
+bq_location        = "US"
+monthly_budget_usd = 10
+
+# After pushing images to Artifact Registry, update these:
+# agent_image = "us-central1-docker.pkg.dev/my-invoiceops-project/invoiceops/agent:v0.1.0"
+# erp_image   = "us-central1-docker.pkg.dev/my-invoiceops-project/invoiceops/erp:v0.1.0"
