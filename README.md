@@ -1,6 +1,6 @@
 # `invoiceops-agent`
 
-[![CI](https://github.com/Abhigyan/invoiceops-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Abhigyan/invoiceops-agent/actions/workflows/ci.yml)
+[![CI](https://github.com/Abh-igyan/invoiceops-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Abh-igyan/invoiceops-agent/actions/workflows/ci.yml)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud-Cloud_Run-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
