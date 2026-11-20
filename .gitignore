@@ -48,6 +48,13 @@ coverage.xml
 # Data & Large Artifacts (committed splits/configs stay tracked; raw PDFs/DBs ignored)
 data/invoices/*.pdf
 data/generated/
+
+# Personal & Interview Prep (Local Only)
+gemini_carbon.md
+docs/DEFEND.md
+docs/DEMO_SCRIPT.md
+docs/RESUME_BULLETS.md
+.personal_backup/
 *.sqlite3
 *.db
 results/raw/

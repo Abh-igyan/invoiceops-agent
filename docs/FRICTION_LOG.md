@@ -41,3 +41,9 @@ Real surprises, SDK/documentation discrepancies, and platform quirks encountered
 - **Workaround:** Joined contiguous `Part.text` segments within an ADK event via `"".join(texts)` in `v4`, added state-machine string sanitizer `sanitize_multiline_json_text()` in `src/invoiceops/tools/security.py` to replace raw in-string `\n`/`\r` characters prior to `json.loads`, and normalized accidental intra-code whitespace in `UPPER_SNAKE_CASE` reason codes.
 - **Proposal to Product Team:** Provide an official `event.text` convenience property on ADK `Event` that concatenates contiguous text parts without delimiter injection while ignoring `thought` parts.
 
+## FL-008 (2026-11-20, Phase P4): FastAPI / Starlette `TestClient` Lifespan Execution & Cloud Run Probe Timing
+- **What happened:** In Starlette `TestClient(app)`, route requests do not trigger the FastAPI `lifespan` context manager unless the client itself is entered as a Python context manager (`with TestClient(app) as client:`). Accessing `request.app.state.svc` inside `/health` during unit tests raised `AttributeError: 'State' object has no attribute 'svc'`.
+- **Workaround:** Made `/health` defensive using `getattr(request.app.state, 'svc', None)` with a fallback config version string, and updated `tests/test_server.py` fixtures to use `with TestClient(srv_mod.app) as c: yield c`.
+- **Proposal to Product Team:** Document explicitly in the ADK/FastAPI serving guide that `TestClient` fixtures must wrap the app in a context manager to execute async lifespan startup hooks.
+
+
