@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import subprocess
 import uuid
@@ -398,6 +399,13 @@ async def run_evaluation(
                     timestamp_utc=datetime.now(UTC).isoformat(),
                 )
                 store.record_eval_case(record)
+                if (
+                    version == "v5"
+                    and hasattr(agent_runner, "store")
+                    and hasattr(agent_runner.store, "record_eval_run")
+                ):
+                    with contextlib.suppress(Exception):
+                        agent_runner.store.record_eval_run(record)
                 rep_records.append(record)
 
                 if rep == 1:
@@ -435,7 +443,12 @@ async def run_evaluation(
     adk_traj_summary["evalset_file"] = f"results/adk_{version}_golden_12.evalset.json"
 
     existing_summary: dict[str, Any] = {}
-    summary_file = results_dir / f"{version}_summary.json"
+    summary_filename = (
+        f"{version}_summary.json"
+        if chosen_split == "golden_12"
+        else f"{version}_{chosen_split}_summary.json"
+    )
+    summary_file = results_dir / summary_filename
     if summary_file.exists():
         loaded_prev = json.loads(summary_file.read_text(encoding="utf-8"))
         if loaded_prev.get("config_version") == cfg.config_version:
