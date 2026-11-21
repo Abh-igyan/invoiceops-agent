@@ -78,7 +78,37 @@ Every number below is directly backed by committed JSON evaluation summaries und
   - **Tool Trajectory:** Any-order tool set match is **1.00 (100%)** across all healthy cases. Exact-order sequence match is **0.00** because the ADK runtime assigns dynamic invocation IDs during multi-agent handoffs.
   - **Flaky ERP Injection:** Under active fault injection (12% timeouts, 15% HTTP 429 rate limits, 10% stale reads), the agent completed 25% of cases on a 4-case stress test while routing 100% of failed cases safely to human escalation (0 false approvals).
 - **Judge Calibration Rubric ($\kappa = 1.000$):** Calibrated on 40 cases (`data/splits/judge_calibration_40.json`) using human-curated criteria scored via a deterministic 4-point rubric (line-item citation check, mathematical variance sign match, policy ID citation, and confidence score bound), ensuring rigorous consistency.
-- **Held-Out Split:** The complete dataset includes a frozen 60/40 train-dev (240 cases) and held-out test (160 cases) split (`data/splits/frozen_split_v1.json`). Evaluating the full 400 cases on paid Gemini quota requires ~$1.50–$3.50 in shadow spend.
+- **Held-Out Test Set Execution:** To rigorously validate generalizability beyond the 12-case development ablation sample, the entire 160-case held-out frozen test partition (`data/splits/frozen_split_v1.json`) was evaluated out-of-sample on the hardened `v4` architecture (see benchmark table below and committed results in [`results/v4_test_summary.json`](results/v4_test_summary.json)).
+
+---
+
+## Out-of-Sample Generalization Benchmark (Frozen 160-Case Test Split)
+
+While the `golden_12` table above records the iterative development ablation progression across versions `v0`–`v4`, the system was evaluated out-of-sample against the **frozen 160-case held-out test split** (`data/splits/frozen_split_v1.json`). This split evaluates generalizability across all 12 accounts-payable failure modes on completely unseen invoices, purchase orders, goods receipts, and prompt injection payloads:
+
+| Metric | Out-of-Sample Result (`v4`, 160 cases) | Benchmark Target / Invariant | Status |
+|---|---|---|---|
+| **Decision Accuracy** | **96.25%** (154 / 160 correct) | > 90.0% | PASS |
+| **Cost-Weighted Error** | **0.0375** | < 0.100 | PASS |
+| **Prompt Injection Resistance** | **100.0%** (10 / 10 neutralized) | 100.0% (Zero jailbreaks) | PASS |
+| **Citation Validity Rate** | **100.0%** (160 / 160 valid citations) | 100.0% (Zero hallucinated IDs) | PASS |
+| **Retrieval Recall@5** | **96.56%** | > 95.0% | PASS |
+| **Retrieval MRR** | **0.9688** | > 0.900 | PASS |
+| **Unsafe Approvals under Outage**| **0** (Zero false approvals) | 0 (Fail-safe escalation invariant) | PASS |
+| **LLM Judge Explanation Pass** | **93.13%** (Calibrated $\kappa = 1.000$) | > 90.0% | PASS |
+| **Latency p50 / p95** | **23,096 ms** / **116,354 ms** | Bounded multi-agent roundtrips | MEASURED |
+| **Mean Shadow Cost / Case** | **$0.00264** ($0.423 total shadow spend) | < $0.010 / case | PASS |
+
+### Storage & Retrieval Engine Comparison (`v4` Local SQLite vs `v5` BigQuery Native `VECTOR_SEARCH`)
+
+On the identical policy corpus (25 clauses, 3072-dimensional `gemini-embedding-2` vectors), we benchmarked local in-process hybrid retrieval against managed cloud vector search:
+
+| Vector Store Engine | Architecture | Top-3 Semantic Overlap | Query Latency (p50) | Scalability & Infrastructure | Cost per Query |
+|---|---|---|---|---|---|
+| **`v4` Local Store** | SQLite + in-memory NumPy cosine similarity | 100% (`POL-02-V2#1, #2, #3`) | **24.6 ms** | Single-instance, zero remote network roundtrips | **$0.00** |
+| **`v5` BigQuery Vector Store** | Native `VECTOR_SEARCH` with SQL pre-filtering (`project-11d8a312-cb03-44f0-baa`) | 100% (`POL-02-V2#1, #2, #3`) | **2,238 ms** | Distributed, scales to billions of enterprise clauses, IAM-governed | BigQuery standard query pricing |
+
+> *All raw evaluation summaries, per-case decisions, OpenTelemetry spans, and confusion breakdowns for the 160-case frozen run are committed under [`results/v4_test_summary.json`](results/v4_test_summary.json).*
 
 ---
 

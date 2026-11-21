@@ -8,7 +8,7 @@ project_name: "invoiceops-agent"
 
 platform:
   mode: "local_ai_studio"
-  gcp_project_id: null
+  gcp_project_id: "project-11d8a312-cb03-44f0-baa"
   region: "us-central1"
   use_enterprise_agent_platform: false
 
