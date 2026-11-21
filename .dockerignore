@@ -17,6 +17,7 @@ tests/
 scripts/
 *.md
 !README.md
+!data/generated/policies/*.md
 .mypy_cache/
 .pytest_cache/
 .coverage

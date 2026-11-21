@@ -5,7 +5,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud-Cloud_Run-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 
-A measured, production-engineered multi-agent accounts-payable (AP) exception resolution system on Google Cloud built using the **Google Agent Development Kit (ADK)**, **Model Context Protocol (MCP)**, **BigQuery Hybrid RAG**, **OpenTelemetry**, and **Cloud Run**.
+A measured, production-engineered multi-agent accounts-payable (AP) exception resolution system on Google Cloud built using the **Google Agent Development Kit (ADK)**, **Model Context Protocol (MCP)**, **SQLite/NumPy Vector Store with BigQuery Cloud Scale Schema & Terraform IaC**, **OpenTelemetry**, and **Cloud Run**.
 
 The system automates three-way matching (invoice PDF vs. purchase order vs. goods receipt note) against versioned corporate policies and a flaky legacy ERP. Crucially, it delegates all tolerance math and date arithmetic to **deterministic Python tools**, isolates untrusted supplier input against prompt injection, enforces human-in-the-loop (HITL) approval gates, and validates every decision through controlled experiments across versions `v0` through `v4`.
 
@@ -34,7 +34,7 @@ flowchart TD
     subgraph Tools["External Systems & MCP"]
         MatTool <--> ErpClient["Resilient MCP Client\n(Backoff, CB, Idempotency)"]
         ErpClient <--> MCPErp["Mock Legacy ERP\n(Cloud Run Internal MCP Server)"]
-        RAGAgent <--> PolicyStore["BigQuery / SQLite Store\n(Semantic Clause Index)"]
+        RAGAgent <--> PolicyStore["SQLite/NumPy Vector Store\n(BigQuery Cloud Scale Schema & Terraform IaC)"]
     end
 
     subgraph HumanApproval["Human-in-the-Loop"]
@@ -67,8 +67,8 @@ Every number below is directly backed by committed JSON evaluation summaries und
 
 ### Statistical & Evaluation Notes:
 - **Sample Size & Overlapping Intervals:** Milestone evaluations were conducted across 3 repetitions on `golden_12`, a 12-case stratified subset covering all AP failure modes within Free-Tier API quotas (500 RPD). On this 12-case sample, several 95% confidence intervals overlap (e.g., `v1` 83.3% ± 20.7% vs `v2` 97.2% ± 12.0%, and `v2` vs `v4`; likewise `v2`'s cost interval `$0.00354 ± $0.00179` encompasses `v3`'s `$0.00227`). The engineering significance lies in categorical failure mode elimination (e.g. 0 false approvals under outage) rather than non-overlapping sample bounds.
-- **`v4` Accuracy & Failure Taxonomy Breakdown:** On Run 1, `v4` achieved **100.0% decision accuracy** with 5.5 LLM calls/case ($0.00318 shadow cost). On Runs 2–3, multi-turn Critic send-backs under rapid sequential turns encountered Gemini Free-Tier 503 deadline timeouts. In our evaluation schema, these timeouts were categorized under `tool_erp_failure` with `mean_erp_retries: 0.0`, reflecting that the timeout occurred during the upstream tool invocation cycle rather than during ERP backoff retries. Crucially, the system did not guess approvals: it cleanly degraded to `escalate_to_human`, maintaining **0% false approvals**.
-- **`v4` Cost Artifact:** The low 3-run mean shadow cost for `v4` ($0.00226) is partially an artifact of the degraded runs executing fewer LLM calls (~3.7 and 3.9 calls vs 5.5 in the healthy run) due to early escalation. On the clean Run 1, cost was $0.00318/case.
+- **`v4` Accuracy & Failure Taxonomy Breakdown:** On Run 1, `v4` achieved **100.0% decision accuracy** with 5.5 LLM calls/case ($0.00272 shadow cost). On Runs 2–3, multi-turn Critic send-backs under rapid sequential turns encountered Gemini Free-Tier 503 deadline timeouts. In our evaluation schema, these timeouts were categorized under `tool_erp_failure` with `mean_erp_retries: 0.0`, reflecting that the timeout occurred during the upstream tool invocation cycle rather than during ERP backoff retries. Crucially, the system did not guess approvals: it cleanly degraded to `escalate_to_human`, maintaining **0% false approvals**.
+- **`v4` Cost Artifact:** The low 3-run mean shadow cost for `v4` ($0.00226) is partially an artifact of the degraded runs executing fewer LLM calls (~3.7 and 3.9 calls vs 5.5 in the healthy run) due to early escalation. On the clean Run 1, cost was $0.00272/case.
 - **ADK Trajectory & Flaky ERP Robustness:** 
   - **Tool Trajectory:** Any-order tool set match is **1.00 (100%)** across all healthy cases. Exact-order sequence match is **0.00** because the ADK runtime assigns dynamic invocation IDs during multi-agent handoffs.
   - **Flaky ERP Injection:** Under active fault injection (12% timeouts, 15% HTTP 429 rate limits, 10% stale reads), the agent completed 25% of cases on a 4-case stress test while routing 100% of failed cases safely to human escalation (0 false approvals).
@@ -138,7 +138,7 @@ python scripts/tasks.py traces --version v4
 The system is deployed on Google Cloud Run v2 as a containerized microservice architecture ([ADR-006](docs/decisions/006-cloud-run-deployment.md)):
 
 - **Live Agent Public URL:** [`https://invoiceops-agent-601764810069.us-central1.run.app`](https://invoiceops-agent-601764810069.us-central1.run.app)
-- **Live ERP Sidecar URL:** [`https://invoiceops-erp-ljzj6brkyq-uc.a.run.app`](https://invoiceops-erp-ljzj6brkyq-uc.a.run.app)
+- **Live ERP Sidecar URL:** [`https://invoiceops-erp-ljzj6brkyq-uc.a.run.app`](https://invoiceops-erp-ljzj6brkyq-uc.a.run.app) (`MOCK_ERP_BASE_URL=https://invoiceops-erp-ljzj6brkyq-uc.a.run.app/mcp/`)
 - **Health Verification:** `GET https://invoiceops-agent-601764810069.us-central1.run.app/health` returns `{"status":"ok","version":"0.1.0","config_version":"p1.0.0"}`.
 
 ### Production Concurrency Load Test Benchmark
@@ -148,12 +148,12 @@ Tested against the live Cloud Run endpoint evaluating real PDF invoices:
 ```text
 Target:       https://invoiceops-agent-601764810069.us-central1.run.app/v1/invoices/evaluate
 Concurrency:  2 concurrent workers
-Requests:     6 full multi-agent invoice evaluations
-Error Rate:   0.0% (6/6 HTTP 200 OK)
-Throughput:   0.09 req/s
-Latency p50:  11,159 ms (~11.2s per 4-agent extraction, matching & verification pipeline)
-Latency Mean: 16,329 ms
-Result:       PASS (0% error rate, zero unhandled exceptions)
+Requests:     6 full multi-agent invoice evaluations (manifest-backed real test cases)
+Error Rate:   0.0% (6/6 cleanly evaluated & three-way matched; 0 degradation)
+Throughput:   0.12 req/s
+Latency p50:  15,658 ms (~15.7s per full 4-agent extraction, matching & verification pipeline)
+Latency Mean: 16,389 ms
+Result:       PASS (0% error rate, zero ERP disconnects, raw outputs logged in results/cloud_run_load_test.json)
 ```
 
 ```bash

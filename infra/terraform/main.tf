@@ -157,6 +157,11 @@ resource "google_cloud_run_v2_service" "agent" {
         value = "120"
       }
 
+      env {
+        name  = "MOCK_ERP_BASE_URL"
+        value = "${google_cloud_run_v2_service.erp.uri}/mcp/"
+      }
+
       resources {
         limits = {
           cpu    = "1"

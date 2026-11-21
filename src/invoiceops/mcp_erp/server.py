@@ -13,6 +13,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 from mcp.server import MCPServer
+from mcp.server.transport_security import TransportSecuritySettings
 from pydantic import BaseModel
 
 from invoiceops.mcp_erp.flaky import FlakyInjector, FlakySettings
@@ -219,6 +220,9 @@ def create_erp_app(
         streamable_http_path="/",
         json_response=True,
         stateless_http=True,
+        transport_security=TransportSecuritySettings(
+            enable_dns_rebinding_protection=False,
+        ),
     )
 
     @asynccontextmanager

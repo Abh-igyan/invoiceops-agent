@@ -117,7 +117,7 @@ storage:
 
 mock_erp:
   topology: "streamable_http_mcp"
-  base_url: "http://127.0.0.1:8001/mcp"
+  base_url: "http://127.0.0.1:8001/mcp/"
   require_cloud_run_iam_auth: false
   flaky_mode: false
   flaky_timeout_rate: 0.12

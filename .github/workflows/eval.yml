@@ -81,7 +81,7 @@ jobs:
           import json, sys
           with open('results/${{ inputs.version }}_summary.json') as f:
               data = json.load(f)
-          acc = data['metrics']['decision_accuracy']['mean']
+          acc = data['multi_run']['metrics']['decision_accuracy']['mean']
           print(f'Accuracy: {acc:.4f}')
           if acc < 0.60:
               print('FAIL: Accuracy below 60% threshold')

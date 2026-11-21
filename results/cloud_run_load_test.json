@@ -1,0 +1,83 @@
+{
+  "report": {
+    "total_requests": 6,
+    "concurrency": 2,
+    "ok_count": 6,
+    "error_count": 0,
+    "error_rate_pct": 0.0,
+    "total_elapsed_seconds": 50.09,
+    "throughput_rps": 0.12,
+    "latency_p50_ms": 15658.23,
+    "latency_p95_ms": 19845.85,
+    "latency_mean_ms": 16388.81,
+    "latency_max_ms": 19845.85
+  },
+  "raw_results": [
+    {
+      "case_id": "INV-4002",
+      "vendor_id": "VEN-002",
+      "status": 200,
+      "latency_ms": 13846.51,
+      "ok": true,
+      "decision": "approve",
+      "reason_codes": [
+        "THREE_WAY_MATCH_PASSED"
+      ]
+    },
+    {
+      "case_id": "INV-4001",
+      "vendor_id": "VEN-001",
+      "status": 200,
+      "latency_ms": 19639.99,
+      "ok": true,
+      "decision": "approve",
+      "reason_codes": [
+        "THREE_WAY_MATCH_PASSED"
+      ]
+    },
+    {
+      "case_id": "INV-4003",
+      "vendor_id": "VEN-003",
+      "status": 200,
+      "latency_ms": 15658.23,
+      "ok": true,
+      "decision": "approve",
+      "reason_codes": [
+        "THREE_WAY_MATCH_PASSED"
+      ]
+    },
+    {
+      "case_id": "INV-4004",
+      "vendor_id": "VEN-004",
+      "status": 200,
+      "latency_ms": 14296.99,
+      "ok": true,
+      "decision": "approve",
+      "reason_codes": [
+        "THREE_WAY_MATCH_PASSED"
+      ]
+    },
+    {
+      "case_id": "INV-4006",
+      "vendor_id": "VEN-006",
+      "status": 200,
+      "latency_ms": 15045.32,
+      "ok": true,
+      "decision": "approve",
+      "reason_codes": [
+        "THREE_WAY_MATCH_PASSED"
+      ]
+    },
+    {
+      "case_id": "INV-4005",
+      "vendor_id": "VEN-005",
+      "status": 200,
+      "latency_ms": 19845.85,
+      "ok": true,
+      "decision": "approve",
+      "reason_codes": [
+        "THREE_WAY_MATCH_PASSED"
+      ]
+    }
+  ]
+}

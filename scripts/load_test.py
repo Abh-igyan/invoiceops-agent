@@ -34,12 +34,29 @@ async def send_request(
                 timeout=180.0,
             )
         elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)
+        payload = {}
+        is_ok = 200 <= resp.status_code < 300
+        decision_val = None
+        reason_codes = []
+        if is_ok:
+            try:
+                payload = resp.json()
+                dec = payload.get("decision", {})
+                decision_val = dec.get("decision")
+                reason_codes = dec.get("reason_codes", [])
+                if "ERP_OR_RETRIEVAL_UNAVAILABLE" in reason_codes:
+                    is_ok = False
+            except Exception:
+                pass
         results.append(
             {
                 "case_id": case_id,
+                "vendor_id": vendor_id,
                 "status": resp.status_code,
                 "latency_ms": elapsed_ms,
-                "ok": 200 <= resp.status_code < 300,
+                "ok": is_ok,
+                "decision": decision_val,
+                "reason_codes": reason_codes,
             }
         )
     except Exception as exc:
@@ -47,6 +64,7 @@ async def send_request(
         results.append(
             {
                 "case_id": case_id,
+                "vendor_id": vendor_id,
                 "status": 0,
                 "latency_ms": elapsed_ms,
                 "ok": False,
@@ -61,24 +79,35 @@ async def run_load_test(
     total_requests: int = 20,
 ) -> dict:
     """Execute a simple concurrency load test against the /v1/invoices/evaluate endpoint."""
-    import httpx
+    import json
 
     url = f"{base_url.rstrip('/')}/v1/invoices/evaluate"
 
-    # Find a sample PDF for load testing
-    invoices_dir = REPO_ROOT / "data" / "invoices"
-    pdf_files = sorted(invoices_dir.glob("*.pdf"))[:total_requests]
-    if not pdf_files:
-        print("ERROR: No PDF files found in data/invoices/. Run `python scripts/tasks.py data`.")
-        sys.exit(1)
-
-    # Cycle through available PDFs if fewer than total_requests
+    # Find sample cases from manifest or data/invoices
+    manifest_path = REPO_ROOT / "data" / "generated" / "cases_manifest.json"
     tasks_list: list[tuple[Path, str, str]] = []
-    for i in range(total_requests):
-        pdf = pdf_files[i % len(pdf_files)]
-        case_id = f"load-test-{i:04d}"
-        vendor_id = f"VND-{(i % 40) + 1:04d}"
-        tasks_list.append((pdf, case_id, vendor_id))
+
+    if manifest_path.exists():
+        with manifest_path.open("r", encoding="utf-8") as f:
+            manifest = json.load(f)
+        for c in manifest[:total_requests]:
+            pdf = REPO_ROOT / c.get("pdf_path", "")
+            cid = c.get("case_id", "")
+            vid = c.get("invoice", {}).get("vendor_id", "VEN-001")
+            if pdf.exists():
+                tasks_list.append((pdf, cid, vid))
+
+    if not tasks_list:
+        invoices_dir = REPO_ROOT / "data" / "invoices"
+        pdf_files = sorted(invoices_dir.glob("*.pdf"))[:total_requests]
+        if not pdf_files:
+            print("ERROR: No PDF files found in data/invoices/. Run tasks.py data.")
+            sys.exit(1)
+        for i in range(total_requests):
+            pdf = pdf_files[i % len(pdf_files)]
+            case_id = f"load-test-{i:04d}"
+            vendor_id = f"VEN-{(i % 40) + 1:03d}"
+            tasks_list.append((pdf, case_id, vendor_id))
 
     results: list[dict] = []
     semaphore = asyncio.Semaphore(concurrency)
@@ -116,6 +145,12 @@ async def run_load_test(
         "latency_mean_ms": round(statistics.mean(latencies), 2) if latencies else 0.0,
         "latency_max_ms": round(max(latencies), 2) if latencies else 0.0,
     }
+
+    out_dir = REPO_ROOT / "results"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "cloud_run_load_test.json"
+    with out_path.open("w", encoding="utf-8") as f:
+        json.dump({"report": report, "raw_results": results}, f, indent=2)
 
     return report
 

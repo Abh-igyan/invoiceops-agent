@@ -46,4 +46,10 @@ Real surprises, SDK/documentation discrepancies, and platform quirks encountered
 - **Workaround:** Made `/health` defensive using `getattr(request.app.state, 'svc', None)` with a fallback config version string, and updated `tests/test_server.py` fixtures to use `with TestClient(srv_mod.app) as c: yield c`.
 - **Proposal to Product Team:** Document explicitly in the ADK/FastAPI serving guide that `TestClient` fixtures must wrap the app in a context manager to execute async lifespan startup hooks.
 
+## FL-009 (2026-11-21, Phase P4): Cloud Run Reverse Proxy TLS Termination & MCP Client 307 Downgrade Guardrail
+- **What happened:** On Google Cloud Run, the Google Front End (GFE) proxy terminates external TLS (`https://...`) and forwards plain HTTP traffic to the container port (`8001`). When `invoiceops-agent` called `MOCK_ERP_BASE_URL=https://invoiceops-erp-...run.app/mcp` (without a trailing slash) and Uvicorn ran without `--proxy-headers`, Starlette's sub-mounted `MCPServer.streamable_http_app()` issued an `HTTP 307 Temporary Redirect` pointing to `http://.../mcp/` (plain HTTP). `mcp.client.streamable_http` / `httpx2` rightly refused to follow an HTTPS-to-HTTP scheme downgrade, causing every ERP tool call to fail retries and silently trigger the agent's safe fallback (`escalate_to_human` with `ERP_OR_RETRIEVAL_UNAVAILABLE`) while still returning `HTTP 200 OK`.
+- **Workaround:** Configured `uvicorn.run(..., proxy_headers=True, forwarded_allow_ips="*")` in `Dockerfile.erp` so Starlette respects `X-Forwarded-Proto: https`, standardized `MOCK_ERP_BASE_URL` with a trailing slash (`.../mcp/`), and added Google Metadata Server OIDC identity token injection (`google.oauth2.id_token.fetch_id_token`) in `ResilientErpMcpClient._invoke_once` for authenticated Cloud Run service-to-service calls.
+- **Proposal to Product Team:** Document reverse-proxy header (`X-Forwarded-Proto`) and trailing-slash sub-mount requirements in the ADK/MCP Cloud Run deployment guide, and surface scheme-downgrade `307` rejections explicitly in `McpToolset` connection errors.
+
+
 

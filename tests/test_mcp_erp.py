@@ -149,3 +149,39 @@ async def test_circuit_breaker_opens_and_recovers_half_open() -> None:
         recovered = await client.lookup_vendor("VEN-001")
         assert recovered["found"] is True
         assert cb.state == CircuitState.CLOSED
+
+
+def test_oidc_token_header_fetching_and_graceful_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify HTTPS MCP URLs fetch OIDC tokens for root origin and degrade cleanly on error."""
+    import google.oauth2.id_token as id_token_mod
+
+    captured_audiences: list[str] = []
+
+    def fake_fetch_id_token(_req: object, audience: str) -> str:
+        captured_audiences.append(audience)
+        return "mock-oidc-jwt"
+
+    monkeypatch.setattr(id_token_mod, "fetch_id_token", fake_fetch_id_token)
+
+    https_client = ResilientErpMcpClient(
+        mcp_url="https://invoiceops-erp-ljzj6brkyq-uc.a.run.app/mcp/"
+    )
+    headers = https_client._build_request_headers()
+    assert headers["Authorization"] == "Bearer mock-oidc-jwt"
+    assert captured_audiences == ["https://invoiceops-erp-ljzj6brkyq-uc.a.run.app"]
+
+    # Existing Authorization header should not trigger OIDC fetch
+    preset_client = ResilientErpMcpClient(
+        mcp_url="https://invoiceops-erp-ljzj6brkyq-uc.a.run.app/mcp/",
+        auth_headers={"Authorization": "Bearer custom-token"},
+    )
+    assert preset_client._build_request_headers()["Authorization"] == "Bearer custom-token"
+    assert len(captured_audiences) == 1
+
+    # Auth exception falls back cleanly without raising
+    def failing_fetch(_req: object, _audience: str) -> str:
+        raise RuntimeError("No metadata server in local dev")
+
+    monkeypatch.setattr(id_token_mod, "fetch_id_token", failing_fetch)
+    fallback_headers = https_client._build_request_headers()
+    assert "Authorization" not in fallback_headers

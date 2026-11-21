@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import logging
 import socket
 import time
 from collections.abc import AsyncIterator, Callable
@@ -12,6 +13,7 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
+from urllib.parse import urlsplit
 
 import httpx2
 import uvicorn
@@ -101,6 +103,11 @@ class ResilientErpMcpClient:
     case_retries: int = 0
     tools_invoked: list[str] = field(default_factory=list)
 
+    def __post_init__(self) -> None:
+        """Normalize MCP endpoint URL to ensure trailing slash and prevent 307 redirects."""
+        if self.mcp_url and not self.mcp_url.endswith("/"):
+            self.mcp_url = f"{self.mcp_url}/"
+
     def reset_case_telemetry(self) -> None:
         """Clear per-case counters prior to evaluating a new invoice."""
         self.case_tool_calls = 0
@@ -141,13 +148,36 @@ class ResilientErpMcpClient:
         msg = f"MCP tool '{tool_name}' failed after {total_attempts} attempts: {last_exc}"
         raise ErpUnavailableError(msg) from last_exc
 
+    def _build_request_headers(self) -> dict[str, str]:
+        """Build HTTP headers, fetching a Cloud Run OIDC ID token for HTTPS endpoints if needed."""
+        headers = dict(self.auth_headers)
+        has_auth = any(k.lower() == "authorization" for k in headers)
+        if self.mcp_url.startswith("https://") and not has_auth and self.asgi_app is None:
+            try:
+                from google.auth.transport.requests import Request
+                from google.oauth2 import id_token
+
+                parsed = urlsplit(self.mcp_url)
+                audience = f"{parsed.scheme}://{parsed.netloc}"
+                token = id_token.fetch_id_token(Request(), audience)
+                if token:
+                    headers["Authorization"] = f"Bearer {token}"
+            except Exception as exc:
+                logging.getLogger(__name__).debug(
+                    "Cloud Run OIDC token fetch skipped/fallback for %s: %s",
+                    self.mcp_url,
+                    exc,
+                )
+        return headers
+
     async def _invoke_once(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         """Open a stateless Streamable HTTP MCP exchange and parse structured JSON output."""
         transport = httpx2.ASGITransport(app=self.asgi_app) if self.asgi_app is not None else None
+        req_headers = await asyncio.to_thread(self._build_request_headers)
         async with (
             httpx2.AsyncClient(
                 transport=transport,
-                headers=self.auth_headers or None,
+                headers=req_headers or None,
                 follow_redirects=True,
                 timeout=httpx2.Timeout(self.timeout_seconds),
             ) as http_client,
