@@ -4,6 +4,11 @@
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud-Cloud_Run-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
+[![Swagger UI Docs](https://img.shields.io/badge/API_Docs-Swagger_UI-009688?logo=swagger&logoColor=white)](https://invoiceops-agent-601764810069.us-central1.run.app/docs)
+
+> **Live Cloud Run Service:** [`https://invoiceops-agent-601764810069.us-central1.run.app`](https://invoiceops-agent-601764810069.us-central1.run.app)  
+> **Interactive Swagger UI (Try It Out):** [`https://invoiceops-agent-601764810069.us-central1.run.app/docs`](https://invoiceops-agent-601764810069.us-central1.run.app/docs)  
+> *(Recruiter Demo API Key for testing `/v1/invoices/evaluate`: `invoiceops-demo-2026`)*
 
 A measured, production-engineered multi-agent accounts-payable (AP) exception resolution system on Google Cloud built using the **Google Agent Development Kit (ADK)**, **Model Context Protocol (MCP)**, **Hybrid Retrieval (SQLite/NumPy local index & native BigQuery VECTOR_SEARCH)**, **OpenTelemetry**, and **Cloud Run**.
 

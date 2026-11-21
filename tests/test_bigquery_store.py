@@ -6,6 +6,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
+pytest.importorskip("google.cloud.bigquery")
+
 from invoiceops.schemas import CaseEvalRecord
 from invoiceops.storage.bigquery_store import BigQueryVectorStore
 

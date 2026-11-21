@@ -12,8 +12,15 @@ import os
 import subprocess
 from typing import Any
 
-from google.cloud import bigquery
-from google.oauth2.credentials import Credentials
+try:
+    from google.cloud import bigquery
+    from google.oauth2.credentials import Credentials
+
+    _HAS_BIGQUERY = True
+except ImportError:
+    bigquery = None  # type: ignore[assignment]
+    Credentials = None  # type: ignore[assignment]
+    _HAS_BIGQUERY = False
 
 from invoiceops.schemas import CaseEvalRecord
 from invoiceops.storage.local_store import RetrievedChunk
@@ -52,8 +59,15 @@ class BigQueryVectorStore:
         policy_table: str = "policy_clauses",
         eval_runs_table: str = "eval_runs",
         location: str = "US",
-        client: bigquery.Client | None = None,
+        client: Any = None,
     ) -> None:
+        if not _HAS_BIGQUERY:
+            msg = (
+                "google-cloud-bigquery is required for BigQueryVectorStore. "
+                "Install it with: pip install '.[gcp]'"
+            )
+            raise ImportError(msg)
+
         self.project_id = project_id or os.getenv("GCP_PROJECT_ID", _DEFAULT_PROJECT_ID)
         self.dataset_id = dataset_id
         self.policy_table = policy_table
