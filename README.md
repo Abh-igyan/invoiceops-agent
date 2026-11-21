@@ -5,9 +5,9 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud-Cloud_Run-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 
-A measured, production-engineered multi-agent accounts-payable (AP) exception resolution system on Google Cloud built using the **Google Agent Development Kit (ADK)**, **Model Context Protocol (MCP)**, **SQLite/NumPy Vector Store with BigQuery Cloud Scale Schema & Terraform IaC**, **OpenTelemetry**, and **Cloud Run**.
+A measured, production-engineered multi-agent accounts-payable (AP) exception resolution system on Google Cloud built using the **Google Agent Development Kit (ADK)**, **Model Context Protocol (MCP)**, **Hybrid Retrieval (SQLite/NumPy local index & native BigQuery VECTOR_SEARCH)**, **OpenTelemetry**, and **Cloud Run**.
 
-The system automates three-way matching (invoice PDF vs. purchase order vs. goods receipt note) against versioned corporate policies and a flaky legacy ERP. Crucially, it delegates all tolerance math and date arithmetic to **deterministic Python tools**, isolates untrusted supplier input against prompt injection, enforces human-in-the-loop (HITL) approval gates, and validates every decision through controlled experiments across versions `v0` through `v4`.
+The system automates three-way matching (invoice PDF vs. purchase order vs. goods receipt note) against versioned corporate policies and a flaky legacy ERP. Crucially, it delegates all tolerance math and date arithmetic to **deterministic Python tools**, isolates untrusted supplier input against prompt injection, enforces human-in-the-loop (HITL) approval gates, protects public Cloud Run endpoints with constant-time `X-API-Key` authentication, and validates every decision through controlled experiments across versions `v0` through `v5`.
 
 ---
 
@@ -34,7 +34,7 @@ flowchart TD
     subgraph Tools["External Systems & MCP"]
         MatTool <--> ErpClient["Resilient MCP Client\n(Backoff, CB, Idempotency)"]
         ErpClient <--> MCPErp["Mock Legacy ERP\n(Cloud Run Internal MCP Server)"]
-        RAGAgent <--> PolicyStore["SQLite/NumPy Vector Store\n(BigQuery Cloud Scale Schema & Terraform IaC)"]
+        RAGAgent <--> PolicyStore["Dual Policy Store\n(Local SQLite/NumPy & BigQuery VECTOR_SEARCH)"]
     end
 
     subgraph HumanApproval["Human-in-the-Loop"]
@@ -117,7 +117,7 @@ copy .env.example .env
 # Generate 400 synthetic invoices, 600 POs/GRNs, and 15 policies
 python scripts/tasks.py data      # Or: make data
 
-# Run Ruff linter and 35 unit tests
+# Run Ruff linter and 41 unit tests
 python scripts/tasks.py check     # Or: make check
 ```
 
@@ -138,10 +138,14 @@ python scripts/tasks.py traces --version v4
 The system is deployed on Google Cloud Run v2 as a containerized microservice architecture ([ADR-006](docs/decisions/006-cloud-run-deployment.md)):
 
 - **Live Agent Public URL:** [`https://invoiceops-agent-601764810069.us-central1.run.app`](https://invoiceops-agent-601764810069.us-central1.run.app)
+- **Interactive OpenAPI / Swagger UI:** [`https://invoiceops-agent-601764810069.us-central1.run.app/docs`](https://invoiceops-agent-601764810069.us-central1.run.app/docs)
 - **Live ERP Sidecar URL:** [`https://invoiceops-erp-ljzj6brkyq-uc.a.run.app`](https://invoiceops-erp-ljzj6brkyq-uc.a.run.app) (`MOCK_ERP_BASE_URL=https://invoiceops-erp-ljzj6brkyq-uc.a.run.app/mcp/`)
-- **Health Verification:** `GET https://invoiceops-agent-601764810069.us-central1.run.app/health` returns `{"status":"ok","version":"0.1.0","config_version":"p1.0.0"}`.
+- **Health Verification (Public Probe):** `GET https://invoiceops-agent-601764810069.us-central1.run.app/health` returns `{"status":"ok","version":"0.1.0","config_version":"p1.0.0"}`.
+- **Endpoint Security & Abuse Protection:** 
+  - `POST /v1/invoices/evaluate` is guarded by constant-time `secrets.compare_digest` header validation against `X-API-Key`.
+  - **Recruiter Demo Access:** Evaluators can click the **Authorize** lock button in Swagger UI (`/docs`) and enter demo key: `invoiceops-demo-2026`. Blind web crawlers and unauthorized callers receive an immediate `401 Unauthorized` before any LLM tokens or compute are expended.
 
-### Production Concurrency Load Test Benchmark
+### Production Concurrency Smoke / Load Test (6 requests, concurrency 2)
 
 Tested against the live Cloud Run endpoint evaluating real PDF invoices:
 
@@ -152,6 +156,7 @@ Requests:     6 full multi-agent invoice evaluations (manifest-backed real test 
 Error Rate:   0.0% (6/6 cleanly evaluated & three-way matched; 0 degradation)
 Throughput:   0.12 req/s
 Latency p50:  15,658 ms (~15.7s per full 4-agent extraction, matching & verification pipeline)
+Latency p95:  19,846 ms (~19.8s tail latency under dual concurrency)
 Latency Mean: 16,389 ms
 Result:       PASS (0% error rate, zero ERP disconnects, raw outputs logged in results/cloud_run_load_test.json)
 ```
@@ -160,6 +165,29 @@ Result:       PASS (0% error rate, zero ERP disconnects, raw outputs logged in r
 # Run async load check against the live Cloud Run deployment
 python scripts/load_test.py --url https://invoiceops-agent-601764810069.us-central1.run.app --concurrency 2 --requests 6
 ```
+
+---
+
+## BigQuery Vector Search Architecture (`v5`)
+
+In `v5`, the retrieval layer connects directly to **Google Cloud BigQuery native `VECTOR_SEARCH`** ([ADR-004](docs/decisions/004-hybrid-retrieval-and-semantic-chunking.md)), comparing managed cloud vector search against local SQLite/NumPy:
+
+- **Dataset & Table:** `project-11d8a312-cb03-44f0-baa.invoiceops.policy_clauses` storing 3072-dim embeddings.
+- **Pre-Filtering Architecture:** BigQuery SQL executes vector distance inside a pre-filtered subquery (`WHERE status = 'active'`) rather than an outer post-filter, preventing superseded historical clauses from artificially stealing `top_k` slots and depressing Recall@5:
+  ```sql
+  SELECT base.clause_id, base.doc_id, base.text, base.status, base.topic, distance
+  FROM VECTOR_SEARCH(
+    (SELECT clause_id, doc_id, text, status, topic, version, embedding
+     FROM `project-11d8a312-cb03-44f0-baa.invoiceops.policy_clauses`
+     WHERE status = 'active'),
+    'embedding',
+    (SELECT @query_embedding AS embedding),
+    top_k => 5,
+    distance_type => 'COSINE'
+  )
+  ORDER BY distance ASC, base.clause_id ASC
+  ```
+- **Execution & Billing Optimization:** Queries execute via `bigquery.Client.query_and_wait()` utilizing BigQuery's short-query optimized path (saving ~200–400ms job creation latency). While 25 clauses consume ~150 KB, Google Cloud applies a **10 MB minimum data scanned floor** per table query on on-demand pricing (~$0.00006/query).
 
 ### Infrastructure as Code & Least-Privilege IAM
 - **Dedicated Service Account:** `invoiceops-agent@` granted strictly:
@@ -177,6 +205,13 @@ python scripts/load_test.py --url https://invoiceops-agent-601764810069.us-centr
 1. **Synthetic Data:** Invoices were generated synthetically using ReportLab with controlled gaussian noise, tilt, and font variations. Real-world hand-written receipts or heavily distorted mobile phone photos would require Cloud Document AI or Vertex AI specialized processors.
 2. **Judge Calibration Boundary:** The LLM-as-a-judge was calibrated against a 40-case ground-truth dataset ($\kappa = 1.000$) for explanation completeness and citation validity. For nuanced legal dispute resolution, human review remains indispensable.
 3. **Free-Tier Rate Limits:** AI Studio's Free-Tier enforces concurrency caps. Under rapid sequential Critic turns, transient 503s occur; in production, enterprise provisioning via Gemini on Vertex AI eliminates this constraint.
+
+---
+
+## Author & License
+
+- **Author:** Abhigyan ([GitHub](https://github.com/Abh-igyan))
+- **License:** Apache License 2.0. See [LICENSE](LICENSE) for details.
 
 ---
 

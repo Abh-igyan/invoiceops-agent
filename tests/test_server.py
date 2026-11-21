@@ -61,12 +61,34 @@ class TestHealthEndpoint:
         assert resp.headers["X-Request-ID"] == "test-123"
 
 
+class TestEvaluateEndpointAuthentication:
+    """Security tests for the /v1/invoices/evaluate endpoint."""
+
+    def test_missing_api_key_returns_401(self, client: TestClient) -> None:
+        resp = client.post(
+            "/v1/invoices/evaluate",
+            data={"case_id": "CASE-001", "vendor_id": "VND-001"},
+        )
+        assert resp.status_code == 401
+        assert "Missing X-API-Key" in resp.json()["detail"]
+
+    def test_invalid_api_key_returns_403(self, client: TestClient) -> None:
+        resp = client.post(
+            "/v1/invoices/evaluate",
+            headers={"X-API-Key": "wrong-key"},
+            data={"case_id": "CASE-001", "vendor_id": "VND-001"},
+        )
+        assert resp.status_code == 403
+        assert "Invalid X-API-Key" in resp.json()["detail"]
+
+
 class TestEvaluateEndpointValidation:
     """Input validation for the /v1/invoices/evaluate endpoint."""
 
     def test_missing_pdf_returns_422(self, client: TestClient) -> None:
         resp = client.post(
             "/v1/invoices/evaluate",
+            headers={"X-API-Key": "invoiceops-demo-2026"},
             data={"case_id": "CASE-001", "vendor_id": "VND-001"},
         )
         assert resp.status_code == 422
@@ -74,6 +96,7 @@ class TestEvaluateEndpointValidation:
     def test_missing_case_id_returns_422(self, client: TestClient) -> None:
         resp = client.post(
             "/v1/invoices/evaluate",
+            headers={"X-API-Key": "invoiceops-demo-2026"},
             files={"pdf": ("test.pdf", b"%PDF-1.4 test", "application/pdf")},
             data={"vendor_id": "VND-001"},
         )

@@ -266,9 +266,26 @@ async def run_evaluation(
                 erp_client=client,
                 telemetry=telemetry,
             )
+        if version == "v5":
+            from invoiceops.storage.bigquery_store import BigQueryVectorStore
+
+            bq_store = BigQueryVectorStore(
+                project_id=cfg.platform.gcp_project_id,
+                dataset_id=cfg.storage.bigquery_dataset,
+                policy_table=cfg.storage.bigquery_policy_table,
+                eval_runs_table=cfg.storage.bigquery_eval_runs_table,
+                location="US",
+            )
+            return V4CriticReliabilityEvaluator(
+                config=cfg,
+                store=bq_store,
+                embed_query_fn=cached_embed_query,
+                erp_client=client,
+                telemetry=telemetry,
+            )
         msg = (
             f"Unsupported experiment version '{version}'. "
-            "Supported: ['v0', 'v1', 'v2', 'v3', 'v3_negative', 'v4']"
+            "Supported: ['v0', 'v1', 'v2', 'v3', 'v3_negative', 'v4', 'v5']"
         )
         raise ValueError(msg)
 

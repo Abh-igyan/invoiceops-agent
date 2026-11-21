@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import secrets
 import sys
 import time
 import uuid
@@ -14,7 +15,19 @@ from pathlib import Path
 from typing import Any
 
 import uvicorn
-from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile
+from fastapi import (
+    Depends,
+    FastAPI,
+    File,
+    Form,
+    HTTPException,
+    Request,
+    Response,
+    Security,
+    UploadFile,
+    status,
+)
+from fastapi.security import APIKeyHeader
 
 from invoiceops.config import AppConfig, load_config, load_runtime_secrets
 from invoiceops.mcp_erp.client import ResilientErpMcpClient
@@ -111,10 +124,45 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("Server shutdown complete")
 
 
+DEFAULT_DEMO_API_KEY = "invoiceops-demo-2026"
+api_key_header = APIKeyHeader(
+    name="X-API-Key",
+    auto_error=False,
+    description="API Key for protected endpoints (Recruiter demo key: `invoiceops-demo-2026`)",
+)
+
+
+def verify_api_key(api_key: str | None = Security(api_key_header)) -> str:
+    """Validate X-API-Key header against server secret or demo key using constant time compare."""
+    expected_key = os.getenv("INVOICEOPS_API_KEY", DEFAULT_DEMO_API_KEY)
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=(
+                "Missing X-API-Key header. For recruiter demo evaluation, "
+                f"use demo key: '{DEFAULT_DEMO_API_KEY}'"
+            ),
+            headers={"WWW-Authenticate": "ApiKey"},
+        )
+    key_bytes = api_key.strip().encode("utf-8")
+    expected_bytes = expected_key.strip().encode("utf-8")
+    if not secrets.compare_digest(key_bytes, expected_bytes):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid X-API-Key header. Access denied.",
+            headers={"WWW-Authenticate": "ApiKey"},
+        )
+    return api_key
+
+
 app = FastAPI(
     title="InvoiceOps Agent",
     version="0.1.0",
-    description="Multi-agent AP invoice exception resolution service",
+    description=(
+        "Production multi-agent accounts-payable exception resolution on Google Cloud Run.\n\n"
+        "**Authentication:** Protected evaluation endpoints require an `X-API-Key` header. "
+        f"For recruiter demo testing, use demo key: `{DEFAULT_DEMO_API_KEY}`."
+    ),
     lifespan=lifespan,
 )
 
@@ -140,7 +188,7 @@ async def health(request: Request) -> dict[str, str]:
     }
 
 
-@app.post("/v1/invoices/evaluate")
+@app.post("/v1/invoices/evaluate", dependencies=[Depends(verify_api_key)])
 async def evaluate_invoice(
     pdf: UploadFile = File(..., description="Invoice PDF document"),  # noqa: B008
     case_id: str = Form(..., description="Unique case identifier"),

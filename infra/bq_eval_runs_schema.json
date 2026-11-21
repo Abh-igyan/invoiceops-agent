@@ -1,0 +1,17 @@
+[
+  {"name": "run_id",                "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "experiment_version",    "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "config_version",        "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "git_sha",              "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "split_name",           "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "rep_index",            "type": "INT64",     "mode": "REQUIRED"},
+  {"name": "case_id",              "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "failure_mode",         "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "is_prompt_injection",  "type": "BOOL",      "mode": "REQUIRED"},
+  {"name": "ground_truth_decision","type": "STRING",    "mode": "REQUIRED"},
+  {"name": "predicted_decision",   "type": "STRING",    "mode": "REQUIRED"},
+  {"name": "is_correct",           "type": "BOOL",      "mode": "REQUIRED"},
+  {"name": "weighted_error_cost",  "type": "FLOAT64",   "mode": "REQUIRED"},
+  {"name": "citation_valid",       "type": "BOOL",      "mode": "REQUIRED"},
+  {"name": "retrieval_recall_at_k","type": "FLOAT64",   "mode": "REQUIRED"}
+]

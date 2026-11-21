@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "invoiceops-agent"
 version = "0.1.0"
-description = "Measured multi-agent accounts-payable exception resolution system on Google Cloud (ADK + MCP + BigQuery RAG)"
+description = "Measured multi-agent accounts-payable exception resolution system on Google Cloud (ADK + MCP + Hybrid RAG + BigQuery VECTOR_SEARCH)"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
@@ -34,6 +34,7 @@ dev = [
 gcp = [
     "google-adk[gcp]>=2.14.0,<3.0.0",
     "google-cloud-secret-manager>=2.21.0,<3.0.0",
+    "google-cloud-bigquery>=3.25.0,<4.0.0",
 ]
 eval = [
     "google-adk[eval]>=2.14.0,<3.0.0",

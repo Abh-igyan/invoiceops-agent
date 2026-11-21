@@ -25,10 +25,12 @@ async def send_request(
 ) -> None:
     """Send a single invoice evaluation request and record latency / status."""
     t0 = time.perf_counter()
+    api_key = os.getenv("INVOICEOPS_API_KEY", "invoiceops-demo-2026")
     try:
         with pdf_path.open("rb") as f:
             resp = await client.post(
                 url,
+                headers={"X-API-Key": api_key},
                 files={"pdf": (pdf_path.name, f, "application/pdf")},
                 data={"case_id": case_id, "vendor_id": vendor_id},
                 timeout=180.0,
