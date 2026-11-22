@@ -1,0 +1,103 @@
+{
+  "timestamp_utc": "2026-11-22T06:53:03Z",
+  "split_name": "golden_12",
+  "n_cases": 12,
+  "comparisons": {
+    "gemini::gemini-3.5-flash-lite": {
+      "status": "SUCCESS",
+      "accuracy": 0.5833,
+      "correct_count": "7/12",
+      "latency_p50_ms": 2668.4,
+      "latency_p95_ms": 4156.7,
+      "mean_input_tokens": 505.8,
+      "mean_output_tokens": 104.5,
+      "estimated_cost_per_invoice_usd": 0.000413,
+      "decisions": [
+        {
+          "case_id": "INV-4002",
+          "ground_truth": "approve",
+          "predicted": "approve",
+          "is_correct": true,
+          "latency_ms": 2832.13
+        },
+        {
+          "case_id": "INV-4081",
+          "ground_truth": "approve",
+          "predicted": "approve",
+          "is_correct": true,
+          "latency_ms": 1982.25
+        },
+        {
+          "case_id": "INV-4111",
+          "ground_truth": "reject",
+          "predicted": "reject",
+          "is_correct": true,
+          "latency_ms": 3723.36
+        },
+        {
+          "case_id": "INV-4152",
+          "ground_truth": "hold",
+          "predicted": "escalate",
+          "is_correct": false,
+          "latency_ms": 932.2
+        },
+        {
+          "case_id": "INV-4186",
+          "ground_truth": "reject",
+          "predicted": "reject",
+          "is_correct": true,
+          "latency_ms": 1323.69
+        },
+        {
+          "case_id": "INV-4219",
+          "ground_truth": "reject",
+          "predicted": "reject",
+          "is_correct": true,
+          "latency_ms": 3033.14
+        },
+        {
+          "case_id": "INV-4246",
+          "ground_truth": "reject",
+          "predicted": "reject",
+          "is_correct": true,
+          "latency_ms": 1617.58
+        },
+        {
+          "case_id": "INV-4275",
+          "ground_truth": "hold",
+          "predicted": "reject",
+          "is_correct": false,
+          "latency_ms": 1174.41
+        },
+        {
+          "case_id": "INV-4301",
+          "ground_truth": "hold",
+          "predicted": "reject",
+          "is_correct": false,
+          "latency_ms": 4156.73
+        },
+        {
+          "case_id": "INV-4326",
+          "ground_truth": "escalate_to_human",
+          "predicted": "escalate",
+          "is_correct": false,
+          "latency_ms": 2668.43
+        },
+        {
+          "case_id": "INV-4352",
+          "ground_truth": "escalate_to_human",
+          "predicted": "escalate",
+          "is_correct": false,
+          "latency_ms": 2912.19
+        },
+        {
+          "case_id": "INV-4377",
+          "ground_truth": "reject",
+          "predicted": "reject",
+          "is_correct": true,
+          "latency_ms": 1207.81
+        }
+      ]
+    }
+  }
+}
