@@ -128,7 +128,7 @@ DEFAULT_DEMO_API_KEY = "invoiceops-demo-2026"
 api_key_header = APIKeyHeader(
     name="X-API-Key",
     auto_error=False,
-    description="API Key for protected endpoints (Recruiter demo key: `invoiceops-demo-2026`)",
+    description="API Key for protected endpoints (Demo key: `invoiceops-demo-2026`)",
 )
 
 
@@ -139,7 +139,7 @@ def verify_api_key(api_key: str | None = Security(api_key_header)) -> str:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=(
-                "Missing X-API-Key header. For recruiter demo evaluation, "
+                "Missing X-API-Key header. For demo evaluation, "
                 f"use demo key: '{DEFAULT_DEMO_API_KEY}'"
             ),
             headers={"WWW-Authenticate": "ApiKey"},
@@ -161,7 +161,7 @@ app = FastAPI(
     description=(
         "Production multi-agent accounts-payable exception resolution on Google Cloud Run.\n\n"
         "**Authentication:** Protected evaluation endpoints require an `X-API-Key` header. "
-        f"For recruiter demo testing, use demo key: `{DEFAULT_DEMO_API_KEY}`."
+        f"For testing, use demo key: `{DEFAULT_DEMO_API_KEY}`."
     ),
     lifespan=lifespan,
 )

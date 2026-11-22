@@ -45,7 +45,7 @@ Phase P4 requires deploying the invoiceops-agent to Google Cloud for a live demo
 
 - Two services means two container images to build and push, adding CI complexity.
 - The ERP runs as a Cloud Run service rather than a sidecar container — slightly higher latency for tool calls vs. localhost, but more realistic for demonstrating production integration patterns.
-- Agent Engine was rejected because it is a managed service that would hide the deployment engineering decisions this portfolio project is designed to showcase.
+- Agent Engine was rejected because it is a managed service that would hide the deployment engineering decisions this architecture is designed to enforce.
 
 ## Consequences
 

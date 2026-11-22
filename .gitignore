@@ -49,7 +49,7 @@ coverage.xml
 data/invoices/*.pdf
 data/generated/
 
-# Personal & Interview Prep (Local Only)
+# Local Notes & Overrides (Local Only)
 gemini_carbon.md
 docs/DEFEND.md
 docs/DEMO_SCRIPT.md

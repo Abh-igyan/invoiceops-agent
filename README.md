@@ -8,7 +8,7 @@
 
 > **Live Cloud Run Service:** [`https://invoiceops-agent-601764810069.us-central1.run.app`](https://invoiceops-agent-601764810069.us-central1.run.app)  
 > **Interactive Swagger UI (Try It Out):** [`https://invoiceops-agent-601764810069.us-central1.run.app/docs`](https://invoiceops-agent-601764810069.us-central1.run.app/docs)  
-> *(Recruiter Demo API Key for testing `/v1/invoices/evaluate`: `invoiceops-demo-2026`)*
+> *(Demo API Key for testing `/v1/invoices/evaluate`: `invoiceops-demo-2026`)*
 
 A measured, production-engineered multi-agent accounts-payable (AP) exception resolution system on Google Cloud built using the **Google Agent Development Kit (ADK)**, **Model Context Protocol (MCP)**, **Hybrid Retrieval (SQLite/NumPy local index & native BigQuery VECTOR_SEARCH)**, **OpenTelemetry**, and **Cloud Run**.
 
@@ -148,7 +148,7 @@ The system is deployed on Google Cloud Run v2 as a containerized microservice ar
 - **Health Verification (Public Probe):** `GET https://invoiceops-agent-601764810069.us-central1.run.app/health` returns `{"status":"ok","version":"0.1.0","config_version":"p1.0.0"}`.
 - **Endpoint Security & Abuse Protection:** 
   - `POST /v1/invoices/evaluate` is guarded by constant-time `secrets.compare_digest` header validation against `X-API-Key`.
-  - **Recruiter Demo Access:** Evaluators can click the **Authorize** lock button in Swagger UI (`/docs`) and enter demo key: `invoiceops-demo-2026`. Blind web crawlers and unauthorized callers receive an immediate `401 Unauthorized` before any LLM tokens or compute are expended.
+  - **Demo Access:** Users can click the **Authorize** lock button in Swagger UI (`/docs`) and enter demo key: `invoiceops-demo-2026`. Automated crawlers and unauthenticated callers receive an immediate `401 Unauthorized` before any LLM tokens or compute are expended.
 
 ### Production Concurrency Smoke / Load Test (6 requests, concurrency 2)
 

@@ -8,7 +8,7 @@
 
 ## 1. Context
 
-`invoiceops-agent` resolves accounts-payable three-way match exceptions (invoice PDF/image vs. purchase order vs. goods receipt) against versioned enterprise policies and a flaky legacy ERP. The primary goal is demonstrating Forward Deployed Engineer (FDE) production judgment: integration resilience, strict boundary between deterministic math and probabilistic reasoning, controlled evaluation before and after every architectural change, OpenTelemetry tracing, and hard cost guardrails.
+`invoiceops-agent` resolves accounts-payable three-way match exceptions (invoice PDF/image vs. purchase order vs. goods receipt) against versioned enterprise policies and a flaky legacy ERP. The primary goal is enforcing production engineering standards: integration resilience, strict boundary between deterministic math and probabilistic reasoning, controlled evaluation before and after every architectural change, OpenTelemetry tracing, and hard cost guardrails.
 
 Key constraints established with the project owner prior to implementation:
 1. **Zero-Cost Iteration (Phases P1–P3):** Spend must be strictly **$0.00** during dataset construction, baseline evaluation (`v0`), multi-agent decomposition (`v1`), and iterative experiments (`v2`–`v4`), using a Google AI Studio `GEMINI_API_KEY` stored only in a git-ignored `.env`.
