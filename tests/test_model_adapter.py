@@ -7,6 +7,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from pydantic import BaseModel
 
+pytest.importorskip("openai")
+
 from invoiceops.models.adapter import UnifiedModelClient
 
 
